@@ -1,0 +1,1550 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>Club · Socios y stock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11/dist/index.global.js"></script>
+
+<style>
+:root{
+  --bg:#F2F2F7; --card:#FFFFFF; --ink:#000000; --mute:rgba(60,60,67,.62); --line:rgba(60,60,67,.14);
+  --glass:rgba(255,255,255,.72); --edge:rgba(255,255,255,.65); --fill:rgba(120,120,128,.12);
+  --accent:#007AFF; --ok:#28A745; --bad:#FF3B30; --warn:#FF9500;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(0,0,0,.06);
+  --ease-apple:cubic-bezier(.32,.72,0,1);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#000000; --card:#1C1C1E; --ink:#FFFFFF; --mute:rgba(235,235,245,.6); --line:rgba(84,84,88,.55);
+    --glass:rgba(30,30,32,.7); --edge:rgba(255,255,255,.11); --fill:rgba(120,120,128,.24);
+    --accent:#0A84FF; --ok:#30D158; --bad:#FF453A; --warn:#FF9F0A;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }
+}
+html{-webkit-text-size-adjust:100%;scroll-behavior:auto}
+body{margin:0;-webkit-tap-highlight-color:transparent;font-variant-numeric:tabular-nums}
+button{cursor:pointer}
+input,select,textarea{color-scheme:light dark}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none}
+
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(28px) saturate(1.7);backdrop-filter:blur(28px) saturate(1.7)}
+.card-shadow{box-shadow:var(--shadow)}
+
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes view{from{opacity:0;transform:translateY(16px) scale(.992);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes dock-in{from{opacity:0;transform:translateY(90px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes island{from{opacity:0;transform:translate(-50%,-18px) scale(.5)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes island-out{from{opacity:1;transform:translate(-50%,0) scale(1)}to{opacity:0;transform:translate(-50%,-14px) scale(.7)}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes menu-in{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.anim-rise{animation:rise .6s var(--ease-apple) backwards}
+.anim-view{animation:view .55s var(--ease-apple) backwards}
+.anim-dock{animation:dock-in .9s var(--ease-apple) .15s backwards}
+.anim-island{animation:island .55s cubic-bezier(.2,1.2,.3,1) both}
+.anim-island-out{animation:island-out .3s ease-in forwards}
+.anim-grow{transform-origin:left;animation:grow .9s var(--ease-apple) .1s backwards}
+.anim-menu{transform-origin:bottom center;animation:menu-in .3s var(--ease-apple) backwards}
+.boot{display:grid;place-items:center;min-height:100dvh;padding:24px;text-align:center;color:var(--mute);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif}
+.boot i{display:block;width:26px;height:26px;margin:0 auto 14px;border-radius:50%;border:3px solid var(--fill);border-top-color:var(--accent);animation:spin .8s linear infinite}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}
+}
+</style>
+
+<style type="text/tailwindcss">
+@theme inline {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", system-ui, "Segoe UI", sans-serif;
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-mute: var(--mute);
+  --color-line: var(--line);
+  --color-edge: var(--edge);
+  --color-fill: var(--fill);
+  --color-accent: var(--accent);
+  --color-ok: var(--ok);
+  --color-bad: var(--bad);
+  --color-warn: var(--warn);
+}
+</style>
+</head>
+<body class="bg-bg font-sans text-ink antialiased">
+<div id="root"><div class="boot"><div><i></i>Cargando la aplicación…<br><small>Necesita conexión a internet la primera vez que se abre.</small></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@11.18.2/dist/motion.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+<script type="text/babel">
+const { useState, useEffect, useLayoutEffect, useRef, useMemo, useSyncExternalStore, createContext, useContext } = React;
+
+/* =====================  Utilidades  ===================== */
+const eur = n => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(n || 0);
+const fmtN = n => new Intl.NumberFormat('es-ES', { maximumFractionDigits: 3 }).format(n || 0);
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+const plural = (n, s, p) => n + ' ' + (n === 1 ? s : p);
+const pad = n => String(n).padStart(2, '0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const today = () => iso(new Date());
+const shift = days => { const d = new Date(); d.setDate(d.getDate() + days); return iso(d); };
+const fdate = s => s ? new Date(s + 'T00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+const daysBetween = (a, b) => Math.round((new Date(b + 'T00:00') - new Date(a + 'T00:00')) / 864e5);
+const PER = { mensual: 1, trimestral: 3, anual: 12 };
+function addMonths(s, n) {
+  const [y, m, d] = s.split('-').map(Number);
+  const t = new Date(y, m - 1 + n, 1);
+  const last = new Date(t.getFullYear(), t.getMonth() + 1, 0).getDate();
+  t.setDate(Math.min(d, last));
+  return iso(t);
+}
+const numVal = v => Math.max(0, Number(String(v).replace(',', '.')) || 0);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+
+/* =====================  Datos y nube  ===================== */
+const SUPABASE_URL = 'https://akgftqavmvqkzqjaoyda.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ddTuvOk8EPRKeKr498XyhA_bVOBg4iG';
+const cloud = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+});
+const KEY = 'club-socios-stock-v1';
+const CLOUD_OWNER_KEY = 'club-socios-cloud-owner';
+const LEGACY_ACCOUNT_KEY = 'club-socios-account-v1';
+function readLegacyAccount() {
+  try { return JSON.parse(localStorage.getItem(LEGACY_ACCOUNT_KEY)); } catch { return null; }
+}
+const blank = () => ({ club: { nombre: 'Mi club', cuota: 30 }, nextNum: 1, socios: [], productos: [], movs: [], ultimaCopia: '' });
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY));
+    if (d && Array.isArray(d.socios) && Array.isArray(d.productos)) return normalize(d);
+  } catch {}
+  return blank();
+}
+function normalize(d) {
+  const socios = d.socios.filter(s => s && typeof s.nombre === 'string' && /^\d{4}-\d\d-\d\d$/.test(s.vence))
+    .map(s => ({ pagos: [], per: 'mensual', cuota: 0, tel: '', email: '', docTipo: 'DNI', docNumero: '', foto: '', notas: '', baja: false, alta: s.vence, ...s, id: s.id || uid() }));
+  const productos = d.productos.filter(p => p && typeof p.nombre === 'string' && Number.isFinite(Number(p.cant)))
+    .map(p => ({ cat: '', unidad: 'ud', min: 0, coste: 0, precio: 0, ...p, id: p.id || uid(), cant: Number(p.cant) }));
+  const ids = new Set(productos.map(p => p.id));
+  return {
+    club: { nombre: String(d.club?.nombre || 'Mi club'), cuota: Number(d.club?.cuota) || 0 },
+    nextNum: Math.max(Number(d.nextNum) || 1, ...socios.map(s => (Number(s.num) || 0) + 1)),
+    socios, productos,
+    movs: (Array.isArray(d.movs) ? d.movs : []).filter(m => m && ids.has(m.prod)),
+    ultimaCopia: /^\d{4}-\d\d-\d\d$/.test(d.ultimaCopia || '') ? d.ultimaCopia : ''
+  };
+}
+const bus = { toast: null };
+const toast = (msg, kind = 'ok') => bus.toast && bus.toast(msg, kind);
+const store = {
+  db: load(), v: 0, subs: new Set(), userId: null, syncTimer: null, syncQueue: Promise.resolve(),
+  commit() {
+    try { localStorage.setItem(KEY, JSON.stringify(this.db)); }
+    catch { toast('No se ha podido guardar la copia local. Comprueba el espacio disponible.', 'bad'); }
+    this.v++; this.subs.forEach(f => f());
+    if (this.userId) {
+      clearTimeout(this.syncTimer);
+      this.syncTimer = setTimeout(() => this.syncRemote().catch(err => toast('No se pudo sincronizar con la nube: ' + (err.message || 'comprueba la conexión'), 'bad')), 650);
+    }
+  },
+  replaceFromCloud(payload, userId) {
+    clearTimeout(this.syncTimer);
+    this.db = normalize(payload || blank());
+    this.userId = userId;
+    try {
+      localStorage.setItem(KEY, JSON.stringify(this.db));
+      localStorage.setItem(CLOUD_OWNER_KEY, userId);
+    } catch {}
+    this.v++; this.subs.forEach(f => f());
+  },
+  syncRemote() {
+    const userId = this.userId;
+    if (!userId) return Promise.resolve();
+    const payload = JSON.parse(JSON.stringify(this.db));
+    this.syncQueue = this.syncQueue.catch(() => {}).then(async () => {
+      if (this.userId !== userId) return;
+      const { error } = await cloud.from('club_data').upsert({ user_id: userId, payload, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+      if (error) throw error;
+    });
+    return this.syncQueue;
+  }
+};
+const subscribe = cb => { store.subs.add(cb); return () => store.subs.delete(cb); };
+const useDB = () => { useSyncExternalStore(subscribe, () => store.v); return store.db; };
+
+/* =====================  Lógica  ===================== */
+function estado(x) {
+  if (x.baja) return 'baja';
+  const d = daysBetween(today(), x.vence);
+  if (d < 0) return 'vencida';
+  if (d <= 7) return 'porvencer';
+  return 'alcorriente';
+}
+function estadoProd(p) {
+  if (p.cant <= 0) return 'agotado';
+  if (p.min > 0 && p.cant <= p.min) return 'bajo';
+  return 'ok';
+}
+function mover(p, tipo, n, nota) {
+  n = Number(n);
+  if (!Number.isFinite(n) || n < 0) return 'Escribe una cantidad válida.';
+  if (tipo !== 'ajuste' && n === 0) return 'La cantidad debe ser mayor que cero.';
+  const delta = tipo === 'entrada' ? n : tipo === 'ajuste' ? n - p.cant : -n;
+  if (tipo === 'ajuste' && delta === 0) return 'El stock ya es esa cantidad.';
+  const nueva = Math.round((p.cant + delta) * 1000) / 1000;
+  if (nueva < 0) return `No hay suficiente stock: quedan ${fmtN(p.cant)} ${p.unidad}.`;
+  p.cant = nueva;
+  store.db.movs.push({ id: uid(), prod: p.id, fecha: new Date().toISOString(), tipo, delta: Math.round(delta * 1000) / 1000, nota: nota || '' });
+  store.commit();
+  return null;
+}
+const TIPOS = { entrada: 'Entrada', salida: 'Salida', merma: 'Merma', ajuste: 'Ajuste' };
+function quick(p, s) {
+  const err = mover(p, s > 0 ? 'entrada' : 'salida', 1, 'Ajuste rápido');
+  if (err) toast(err, 'bad');
+}
+
+function download(name, text, type) {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+const cell = v => { let s = String(v ?? ''); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+const csv = (cab, filas) => '﻿' + [cab, ...filas].map(r => r.map(cell).join(';')).join('\r\n');
+const dec = n => String(n).replace('.', ',');
+function backup() {
+  store.db.ultimaCopia = today(); store.commit();
+  download(`copia-club-${today()}.json`, JSON.stringify(store.db, null, 2), 'application/json');
+  toast('Copia descargada');
+}
+function exportSocios() {
+  download(`socios-${today()}.csv`, csv(['Nº', 'Nombre', 'Tipo de documento', 'Nº de documento', 'Teléfono', 'Email', 'Alta', 'Cuota', 'Periodicidad', 'Pagada hasta', 'Estado', 'Notas'],
+    store.db.socios.map(x => [x.num, x.nombre, x.docTipo || '', x.docNumero || '', x.tel, x.email, x.alta, dec(x.cuota), x.per, x.vence, estado(x), x.notas])), 'text/csv;charset=utf-8');
+}
+function resizeMemberPhoto(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, 720 / Math.max(img.naturalWidth, img.naturalHeight));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return reject(new Error('No se pudo procesar la imagen.'));
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(blob => {
+        if (!blob) return reject(new Error('No se pudo comprimir la imagen.'));
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('No se pudo leer la imagen.'));
+        reader.readAsDataURL(blob);
+      }, 'image/jpeg', 0.72);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('El archivo no es una imagen válida.')); };
+    img.src = url;
+  });
+}
+function exportStock() {
+  download(`stock-${today()}.csv`, csv(['Producto', 'Categoría', 'Unidad', 'Cantidad', 'Mínimo', 'Coste', 'Precio', 'Valor a coste'],
+    store.db.productos.map(p => [p.nombre, p.cat, p.unidad, dec(p.cant), dec(p.min), dec(p.coste), dec(p.precio), dec(Math.round(p.cant * p.coste * 100) / 100)])), 'text/csv;charset=utf-8');
+}
+function cargarEjemplo() {
+  const db = store.db;
+  const s = (nombre, tel, email, cuota, per, vence, alta, pagos = []) => db.socios.push({ id: uid(), num: db.nextNum++, nombre, tel, email, alta, cuota, per, vence, baja: false, notas: '', pagos });
+  s('Ana Ruiz', '600 111 222', 'ana@ejemplo.com', 30, 'mensual', shift(18), shift(-200), [{ fecha: shift(-12), importe: 30, periodos: 1 }, { fecha: shift(-42), importe: 30, periodos: 1 }, { fecha: shift(-73), importe: 30, periodos: 1 }]);
+  s('Luis Prats', '600 333 444', '', 30, 'mensual', shift(-12), shift(-150), [{ fecha: shift(-44), importe: 30, periodos: 1 }, { fecha: shift(-75), importe: 30, periodos: 1 }]);
+  s('Marta Vidal', '600 555 666', 'marta@ejemplo.com', 80, 'trimestral', shift(4), shift(-90), [{ fecha: shift(-86), importe: 80, periodos: 1 }]);
+  s('Jordi Ferrer', '', 'jordi@ejemplo.com', 280, 'anual', shift(210), shift(-155), [{ fecha: shift(-155), importe: 280, periodos: 1 }]);
+  const p = (nombre, cat, unidad, cant, min, coste, precio) => {
+    const np = { id: uid(), nombre, cat, unidad, cant: 0, min, coste, precio };
+    db.productos.push(np); mover(np, 'entrada', cant, 'Stock inicial');
+  };
+  p('Cerveza de barril', 'Bebidas', 'l', 40, 20, 2.1, 4.5);
+  p('Vino tinto', 'Bebidas', 'botella', 6, 8, 5.5, 14);
+  p('Agua mineral', 'Bebidas', 'ud', 48, 24, 0.35, 1.5);
+  p('Café en grano', 'Cocina', 'kg', 3, 2, 14, 0);
+  p('Hielo', 'Cocina', 'kg', 0, 5, 0.9, 0);
+  store.commit();
+}
+
+/* =====================  Animación (Motion)  ===================== */
+function pop(el) {
+  if (!el || reduce) return;
+  const m = window.Motion;
+  if (m) m.animate(el, { scale: [1.28, 1] }, { type: 'spring', stiffness: 520, damping: 16 });
+  else el.animate([{ transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 240, easing: 'cubic-bezier(.32,.72,0,1)' });
+}
+function CountUp({ value, format = n => String(Math.round(n)) }) {
+  const ref = useRef(null);
+  const prev = useRef(0);
+  useEffect(() => {
+    const el = ref.current, from = prev.current;
+    prev.current = value;
+    if (!el) return;
+    const m = window.Motion;
+    if (reduce || !m || from === value) { el.textContent = format(value); return; }
+    const c = m.animate(from, value, { duration: 0.9, ease: [0.32, 0.72, 0, 1], onUpdate: v => { el.textContent = format(v); } });
+    return () => { c.stop && c.stop(); el.textContent = format(value); };
+  }, [value]);
+  return <span ref={ref}>{format(0)}</span>;
+}
+function useReady() {
+  const [on, setOn] = useState(false);
+  useEffect(() => { const r = requestAnimationFrame(() => requestAnimationFrame(() => setOn(true))); return () => cancelAnimationFrame(r); }, []);
+  return on;
+}
+
+/* =====================  Iconos  ===================== */
+const mk = d => p => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...p}>{d}</svg>;
+const I = {
+  home: mk(<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />),
+  users: mk(<><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6" /><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.2.7 3.5 2.6 3.5 5.7" /></>),
+  box: mk(<><path d="M21 8 12 3 3 8v8l9 5 9-5z" /><path d="m3 8 9 5 9-5M12 13v8" /></>),
+  search: mk(<><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></>),
+  plus: mk(<path d="M12 5v14M5 12h14" />),
+  minus: mk(<path d="M5 12h14" />),
+  sliders: mk(<><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" /></>),
+  chevron: mk(<path d="m9 6 6 6-6 6" />),
+  x: mk(<path d="M6 6l12 12M18 6 6 18" />),
+  check: mk(<path d="m5 12.5 4.5 4.5L19 7.5" />),
+  alert: mk(<><path d="M12 8v5M12 16.5v.01" /><path d="M10.3 3.9 2.5 17.5A2 2 0 0 0 4.2 20.5h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /></>),
+  download: mk(<><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5" /><path d="M5 19h14" /></>),
+  upload: mk(<><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5" /><path d="M5 19h14" /></>),
+  table: mk(<><rect x="4" y="3" width="16" height="18" rx="2.5" /><path d="M4 9h16M4 15h16M10 9v12" /></>),
+  trash: mk(<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" />),
+  star: mk(<path d="m12 3 2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z" />),
+  card: mk(<><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h3" /></>),
+  pause: mk(<path d="M9 5v14M15 5v14" />),
+  play: mk(<path d="M8 5.5v13l10-6.5z" />),
+  logout: mk(<><path d="M10 17l5-5-5-5M15 12H3" /><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" /></>)
+};
+
+/* =====================  Contexto de la app  ===================== */
+const AppCtx = createContext(null);
+const useApp = () => useContext(AppCtx);
+const TABS = ['resumen', 'socios', 'stock'];
+const TAB_NAMES = { resumen: 'Resumen', socios: 'Socios', stock: 'Stock' };
+
+/* =====================  Piezas visuales  ===================== */
+const GRADS = ['from-[#FFB340] to-[#FF375F]', 'from-[#64D2FF] to-[#0A84FF]', 'from-[#5EE08A] to-[#12B5A8]', 'from-[#C77DFF] to-[#5E5CE6]', 'from-[#FF8FA3] to-[#FF9F0A]', 'from-[#7D7AFF] to-[#32ADE6]'];
+const gradFor = s => GRADS[[...String(s)].reduce((a, c) => a + c.charCodeAt(0), 0) % GRADS.length];
+const initials = n => n.trim().split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?';
+const Avatar = ({ name, dim, size = 'size-11' }) => (
+  <div className={`${size} grid shrink-0 place-items-center rounded-full bg-gradient-to-br ${gradFor(name)} text-[15px] font-semibold text-white ${dim ? 'opacity-45 grayscale' : ''}`}>{initials(name)}</div>
+);
+const Tile = ({ name, text, size = 'size-11' }) => (
+  <div className={`${size} grid shrink-0 place-items-center rounded-[13px] bg-gradient-to-br ${gradFor(name)} text-[16px] font-semibold text-white`}>{(text || name || '?').trim()[0]?.toUpperCase()}</div>
+);
+
+const PILL = { ok: 'bg-ok/15 text-ok', warn: 'bg-warn/20 text-warn', bad: 'bg-bad/15 text-bad', mute: 'bg-fill text-mute' };
+const Pill = ({ kind = 'mute', children }) => (
+  <span className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-[3px] text-[12.5px] font-semibold ${PILL[kind]}`}>
+    <span className="size-1.5 rounded-full bg-current" />{children}
+  </span>
+);
+
+const BTN = {
+  primary: 'bg-accent text-white hover:brightness-110',
+  tint: 'bg-accent/12 text-accent hover:bg-accent/20',
+  plain: 'bg-fill text-ink hover:bg-fill/70',
+  danger: 'bg-bad/12 text-bad hover:bg-bad/20'
+};
+function Btn({ kind = 'tint', size = 'md', className = '', ...p }) {
+  return <button type="button" {...p} className={`inline-flex select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-full font-semibold transition duration-200 ease-[var(--ease-apple)] active:scale-[.96] disabled:pointer-events-none disabled:opacity-40 ${size === 'sm' ? 'h-8 px-3.5 text-[13.5px]' : 'h-11 px-5 text-[16px]'} ${BTN[kind]} ${className}`} />;
+}
+
+function Card({ className = '', delay = 0, children }) {
+  return <section style={{ animationDelay: delay + 'ms' }} className={`anim-rise card-shadow rounded-[26px] bg-card p-5 ${className}`}>{children}</section>;
+}
+function Group({ title, action, children, className = '' }) {
+  return (
+    <div className={className}>
+      {(title || action) && <div className="flex items-end justify-between px-1 pb-2.5"><h2 className="text-[20px] font-bold tracking-tight">{title}</h2>{action}</div>}
+      <div className="card-shadow divide-y divide-line overflow-hidden rounded-[22px] bg-card">{children}</div>
+    </div>
+  );
+}
+const Empty = ({ children }) => <div className="px-5 py-8 text-center text-[15px] text-mute">{children}</div>;
+function LargeTitle({ title, sub, right }) {
+  return (
+    <header className="flex items-end justify-between gap-4 pb-5 pt-3">
+      <div className="min-w-0">
+        <h1 className="text-[34px] font-bold leading-[1.05] tracking-[-0.03em] sm:text-[42px]">{title}</h1>
+        {sub && <p className="mt-2 text-[17px] leading-snug text-mute">{sub}</p>}
+      </div>
+      {right}
+    </header>
+  );
+}
+
+function Ring({ pct, size = 124, stroke = 14, color = 'var(--ok)' }) {
+  const r = (size - stroke) / 2, c = 2 * Math.PI * r, on = useReady();
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90 shrink-0" aria-hidden="true">
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--fill)" strokeWidth={stroke} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeLinecap="round"
+        strokeDasharray={c} strokeDashoffset={on ? c * (1 - pct) : c} style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(.32,.72,0,1) .15s' }} />
+    </svg>
+  );
+}
+
+function Segmented({ options, value, onChange, label }) {
+  const refs = useRef({});
+  const [pos, setPos] = useState(null);
+  const measure = () => { const el = refs.current[value]; if (el) setPos({ left: el.offsetLeft, width: el.offsetWidth }); };
+  useLayoutEffect(measure, [value, options.length]);
+  useEffect(() => { window.addEventListener('resize', measure); return () => window.removeEventListener('resize', measure); }, [value]);
+  return (
+    <div role="tablist" aria-label={label} className="relative inline-flex max-w-full rounded-[11px] bg-fill p-0.5">
+      {pos && <span aria-hidden="true" className="absolute bottom-0.5 top-0.5 rounded-[9px] bg-white shadow-[0_1px_3px_rgba(0,0,0,.18)] transition-[left,width] duration-[450ms] ease-[var(--ease-apple)] dark:bg-[#636366]" style={{ left: pos.left, width: pos.width }} />}
+      {options.map(([v, t]) => (
+        <button key={v} ref={el => { refs.current[v] = el; }} role="tab" aria-selected={value === v} onClick={() => onChange(v)}
+          className={`relative z-10 h-8 whitespace-nowrap rounded-[9px] px-3.5 text-[13.5px] font-semibold transition-colors duration-200 ${value === v ? 'text-ink' : 'text-mute hover:text-ink'}`}>{t}</button>
+      ))}
+    </div>
+  );
+}
+
+function SearchField({ value, onChange, placeholder, label }) {
+  return (
+    <div className="relative min-w-0 flex-1">
+      <I.search className="pointer-events-none absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-mute" />
+      <input type="search" value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} aria-label={label}
+        className="h-11 w-full rounded-[13px] bg-fill pl-10 pr-10 text-[16px] outline-none transition placeholder:text-mute focus:ring-2 focus:ring-accent/50 [&::-webkit-search-cancel-button]:hidden" />
+      {value && <button aria-label="Borrar búsqueda" onClick={() => onChange('')} className="absolute right-2.5 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-full bg-mute/40 text-white"><I.x className="size-3.5" strokeWidth="3" /></button>}
+    </div>
+  );
+}
+
+function Stepper({ p }) {
+  const ref = useRef(null), first = useRef(true);
+  useEffect(() => { if (first.current) { first.current = false; return; } pop(ref.current); }, [p.cant]);
+  return (
+    <div className="flex items-center rounded-full bg-fill p-0.5" onClick={e => e.stopPropagation()}>
+      <button aria-label={`Restar una unidad de ${p.nombre}`} onClick={() => quick(p, -1)} className="grid size-9 place-items-center rounded-full transition active:scale-90 hover:bg-fill"><I.minus className="size-[18px]" strokeWidth="2.4" /></button>
+      <span className="min-w-[3.6rem] px-1 text-center leading-tight"><b ref={ref} className="inline-block text-[17px] font-semibold">{fmtN(p.cant)}</b><span className="block text-[11px] text-mute">{p.unidad}</span></span>
+      <button aria-label={`Sumar una unidad de ${p.nombre}`} onClick={() => quick(p, 1)} className="grid size-9 place-items-center rounded-full transition active:scale-90 hover:bg-fill"><I.plus className="size-[18px]" strokeWidth="2.4" /></button>
+    </div>
+  );
+}
+
+/* =====================  Formularios  ===================== */
+const FormGroup = ({ title, hint, children, className = '' }) => (
+  <div className={className}>
+    {title && <p className="px-4 pb-1.5 text-[13px] text-mute">{title}</p>}
+    <div className="divide-y divide-line overflow-hidden rounded-[18px] bg-card">{children}</div>
+    {hint && <p className="px-4 pt-1.5 text-[13px] leading-snug text-mute">{hint}</p>}
+  </div>
+);
+const FRow = ({ label, children }) => (
+  <label className="flex min-h-[3.1rem] items-center gap-3 px-4">
+    <span className="w-[7.4rem] shrink-0 text-[16px]">{label}</span>
+    <span className="block min-w-0 flex-1">{children}</span>
+  </label>
+);
+const inp = 'block w-full bg-transparent py-3 text-[16px] outline-none placeholder:text-mute/60';
+function SettingRow({ icon: Ic, tint, label, sub, onClick, danger }) {
+  return (
+    <button onClick={onClick} className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-fill/60 active:bg-fill">
+      <span className={`grid size-8 shrink-0 place-items-center rounded-[9px] text-white ${tint}`}><Ic className="size-[18px]" /></span>
+      <span className="min-w-0 flex-1">
+        <span className={`block text-[16px] ${danger ? 'text-bad' : ''}`}>{label}</span>
+        {sub && <span className="block truncate text-[13px] text-mute">{sub}</span>}
+      </span>
+      <I.chevron className="size-4 shrink-0 text-mute/60" />
+    </button>
+  );
+}
+
+/* =====================  Hoja modal (sheet)  ===================== */
+function Sheet({ title, action, children }) {
+  const { sheetOpen, closeSheet, sheetGone } = useApp();
+  const [mounted, setMounted] = useState(false);
+  const panel = useRef(null), drag = useRef(null);
+  useEffect(() => { const r = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(r); }, []);
+  useEffect(() => { if (!sheetOpen) { const t = setTimeout(sheetGone, 340); return () => clearTimeout(t); } }, [sheetOpen]);
+  useEffect(() => {
+    const onKey = e => { if (e.key === 'Escape' && !document.querySelector('[data-top-overlay]')) closeSheet(); };
+    window.addEventListener('keydown', onKey);
+    const prevOv = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prevOv; };
+  }, []);
+  const shown = mounted && sheetOpen;
+  const down = e => {
+    if (window.innerWidth >= 640 || e.target.closest('button')) return;
+    drag.current = { y: e.clientY, dy: 0 };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    panel.current.style.transition = 'none';
+  };
+  const move = e => {
+    const d = drag.current; if (!d) return;
+    d.dy = Math.max(0, e.clientY - d.y);
+    panel.current.style.transform = `translateY(${d.dy}px)`;
+  };
+  const up = () => {
+    const d = drag.current; if (!d) return;
+    drag.current = null;
+    panel.current.style.transition = '';
+    if (d.dy > 110) { panel.current.style.transform = 'translateY(100%)'; closeSheet(); }
+    else panel.current.style.transform = '';
+  };
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6">
+      <div onClick={closeSheet} className={`absolute inset-0 bg-black/35 backdrop-blur-[3px] transition-opacity duration-300 ${shown ? 'opacity-100' : 'opacity-0'}`} />
+      <div ref={panel} role="dialog" aria-modal="true" aria-label={title}
+        className={`relative flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-[30px] bg-bg shadow-2xl transition-[translate,scale,opacity,transform] duration-[450ms] ease-[var(--ease-apple)] sm:max-w-[560px] sm:rounded-[30px] ${shown ? 'translate-y-0 opacity-100 sm:scale-100' : 'translate-y-full opacity-0 sm:translate-y-8 sm:scale-95'}`}>
+        <div onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} className="shrink-0 touch-none select-none">
+          <div className="mx-auto mt-2 h-[5px] w-9 rounded-full bg-mute/35 sm:hidden" />
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center px-5 pb-2 pt-2 sm:pt-4">
+            <button onClick={closeSheet} className="justify-self-start py-1.5 text-[17px] text-accent">Cancelar</button>
+            <h2 className="max-w-[52vw] truncate text-[17px] font-semibold">{title}</h2>
+            <div className="justify-self-end">
+              {action && <button type="submit" form={action.form} disabled={action.disabled} className="py-1.5 text-[17px] font-semibold text-accent disabled:opacity-40">{action.label}</button>}
+            </div>
+          </div>
+        </div>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-2">
+          <div className="space-y-6">{children}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---- Ficha de socio ---- */
+function SocioSheet({ id }) {
+  useDB();
+  const app = useApp(), db = store.db;
+  const x = id ? db.socios.find(s => s.id === id) : null;
+  const [f, setF] = useState(() => x
+    ? { nombre: x.nombre, tel: x.tel, email: x.email, docTipo: x.docTipo || 'DNI', docNumero: x.docNumero || '', alta: x.alta, cuota: String(x.cuota), per: x.per, vence: x.vence, notas: x.notas }
+    : { nombre: '', tel: '', email: '', docTipo: 'DNI', docNumero: '', alta: today(), cuota: db.club.cuota ? String(db.club.cuota) : '', per: 'mensual', vence: addMonths(today(), 1), notas: '' });
+  const [photo, setPhoto] = useState(() => x?.foto || '');
+  const photoRef = useRef(null);
+  const touched = useRef(!!x);
+  if (id && !x) return null;
+  const set = k => e => {
+    const v = e.target.value;
+    if (k === 'vence') touched.current = true;
+    setF(s => {
+      const n = { ...s, [k]: v };
+      if (!touched.current && (k === 'alta' || k === 'per') && n.alta) n.vence = addMonths(n.alta, PER[n.per]);
+      return n;
+    });
+  };
+  const save = e => {
+    e.preventDefault();
+    const nombre = f.nombre.trim();
+    if (!nombre) return toast('Escribe el nombre del socio', 'bad');
+    if (!f.docNumero.trim()) return toast('Escribe el número del DNI o pasaporte', 'bad');
+    const data = { nombre, tel: f.tel.trim(), email: f.email.trim(), docTipo: f.docTipo, docNumero: f.docNumero.trim().toUpperCase(), foto: photo, alta: f.alta, cuota: numVal(f.cuota), per: f.per, vence: f.vence, notas: f.notas.trim() };
+    if (x) Object.assign(x, data);
+    else db.socios.push({ id: uid(), num: db.nextNum++, baja: false, pagos: [], ...data });
+    store.commit(); app.closeSheet(); toast(x ? 'Cambios guardados' : 'Socio añadido');
+  };
+  const e = x ? estado(x) : null;
+  const pagos = x ? x.pagos.slice(-8).reverse() : [];
+  const loadPhoto = async ev => {
+    const file = ev.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast('Elige un archivo de imagen', 'bad'); ev.target.value = ''; return; }
+    if (file.size > 12 * 1024 * 1024) { toast('La imagen debe pesar menos de 12 MB', 'bad'); ev.target.value = ''; return; }
+    try { setPhoto(await resizeMemberPhoto(file)); toast('Foto añadida'); }
+    catch (err) { toast(err.message || 'No se pudo cargar la foto', 'bad'); }
+    ev.target.value = '';
+  };
+  const baja = async () => { x.baja = !x.baja; store.commit(); app.closeSheet(); toast(x.baja ? 'Socio dado de baja' : 'Socio reactivado'); };
+  const borrar = async () => {
+    if (await app.ask({ title: `¿Eliminar a ${x.nombre}?`, message: 'Se borrará también todo su historial de pagos. No se puede deshacer.', confirmLabel: 'Eliminar', destructive: true })) {
+      db.socios = db.socios.filter(s => s.id !== x.id); store.commit(); app.closeSheet(); toast('Socio eliminado');
+    }
+  };
+  return (
+    <Sheet title={x ? 'Ficha del socio' : 'Nuevo socio'} action={{ label: 'Guardar', form: 'socio-form' }}>
+      {x && (
+        <div className="flex flex-col items-center gap-3 pt-1 text-center">
+          {photo ? <img src={photo} alt={`Foto frontal de ${x.nombre}`} className="size-20 rounded-full object-cover" /> : <Avatar name={x.nombre} dim={x.baja} size="size-20 text-[28px]" />}
+          <div>
+            <p className="text-[22px] font-bold tracking-tight">{x.nombre}</p>
+            <p className="text-[14px] text-mute">Socio nº {x.num}, alta el {fdate(x.alta)}</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <Pill kind={{ alcorriente: 'ok', porvencer: 'warn', vencida: 'bad', baja: 'mute' }[e]}>{{ alcorriente: 'Al corriente', porvencer: 'Vence pronto', vencida: 'Cuota vencida', baja: 'Baja' }[e]}</Pill>
+            {!x.baja && <Btn size="sm" kind="primary" onClick={() => app.openSheet({ type: 'cobro', id: x.id })}><I.card className="size-4" />Cobrar cuota</Btn>}
+          </div>
+        </div>
+      )}
+      <form id="socio-form" onSubmit={save} className="space-y-6">
+        <FormGroup>
+          <FRow label="Nombre"><input required maxLength="80" value={f.nombre} onChange={set('nombre')} placeholder="Nombre y apellidos" className={inp} autoFocus={!x} /></FRow>
+          <FRow label="Teléfono"><input type="tel" maxLength="30" value={f.tel} onChange={set('tel')} placeholder="Opcional" className={inp} /></FRow>
+          <FRow label="Email"><input type="text" inputMode="email" autoComplete="off" maxLength="80" value={f.email} onChange={set('email')} placeholder="Opcional" className={inp} /></FRow>
+        </FormGroup>
+        <FormGroup title="Documento de identidad" hint="Necesario para registrar a la socia.">
+          <FRow label="Tipo"><select required value={f.docTipo} onChange={set('docTipo')} className={inp}><option value="DNI">DNI</option><option value="Pasaporte">Pasaporte</option></select></FRow>
+          <FRow label="Número"><input required maxLength="24" autoComplete="off" value={f.docNumero} onChange={set('docNumero')} placeholder={f.docTipo === 'DNI' ? 'Número de DNI' : 'Número de pasaporte'} className={inp} /></FRow>
+        </FormGroup>
+        <div className="rounded-[18px] bg-card p-4">
+          <p className="text-[15px] font-semibold">Foto de frente <span className="font-normal text-mute">(opcional)</span></p>
+          <p className="mt-1 text-[13px] leading-snug text-mute">Puedes elegir una imagen o hacer una foto con el móvil.</p>
+          <input ref={photoRef} type="file" accept="image/*" capture="user" hidden onChange={loadPhoto} />
+          <div className="mt-3 flex items-center gap-3">
+            {photo && <img src={photo} alt="Vista previa de la foto frontal" className="size-16 shrink-0 rounded-full object-cover" />}
+            <Btn kind="plain" size="sm" onClick={() => photoRef.current?.click()}>{photo ? 'Cambiar foto' : 'Añadir foto'}</Btn>
+            {photo && <Btn kind="plain" size="sm" onClick={() => { setPhoto(''); toast('Foto quitada'); }}>Quitar</Btn>}
+          </div>
+          <p className="mt-3 text-[12px] leading-snug text-mute">El documento y la foto se guardan en este navegador y se incluirán en la copia de seguridad del club.</p>
+        </div>
+        <FormGroup title="Cuota" hint="Si todavía no ha pagado, pon la fecha de alta en «Pagada hasta».">
+          <FRow label="Importe"><input type="number" inputMode="decimal" min="0" step="0.01" required value={f.cuota} onChange={set('cuota')} placeholder="0,00 €" className={inp} /></FRow>
+          <FRow label="Periodicidad"><select value={f.per} onChange={set('per')} className={inp}>{Object.keys(PER).map(k => <option key={k} value={k}>{k[0].toUpperCase() + k.slice(1)}</option>)}</select></FRow>
+          <FRow label="Fecha de alta"><input type="date" required value={f.alta} onChange={set('alta')} className={inp} /></FRow>
+          <FRow label="Pagada hasta"><input type="date" required value={f.vence} onChange={set('vence')} className={inp} /></FRow>
+        </FormGroup>
+        <FormGroup title="Notas">
+          <textarea maxLength="400" rows="3" value={f.notas} onChange={set('notas')} placeholder="Opcional" className={`${inp} resize-none px-4`} />
+        </FormGroup>
+      </form>
+      {x && (
+        <>
+          <FormGroup title="Últimos pagos">
+            {pagos.length ? pagos.map((p, i) => (
+              <div key={i} className="flex items-center justify-between gap-3 px-4 py-3 text-[15px]">
+                <span>{fdate(p.fecha)}<span className="block text-[13px] text-mute">{p.periodos > 1 ? p.periodos + ' cuotas' : '1 cuota'}</span></span>
+                <b className="font-semibold">{eur(p.importe)}</b>
+              </div>
+            )) : <Empty>Todavía no hay pagos registrados.</Empty>}
+          </FormGroup>
+          <FormGroup>
+            <SettingRow icon={x.baja ? I.play : I.pause} tint="bg-[#8E8E93]" label={x.baja ? 'Reactivar socio' : 'Dar de baja'} onClick={baja} />
+            <SettingRow icon={I.trash} tint="bg-[#FF3B30]" label="Eliminar socio" danger onClick={borrar} />
+          </FormGroup>
+        </>
+      )}
+    </Sheet>
+  );
+}
+
+/* ---- Cobro de cuota ---- */
+function CobroSheet({ id }) {
+  useDB();
+  const app = useApp();
+  const x = store.db.socios.find(s => s.id === id);
+  const [np, setNp] = useState(1);
+  const [fecha, setFecha] = useState(today());
+  const [importe, setImporte] = useState(x ? x.cuota.toFixed(2) : '0');
+  if (!x) return null;
+  const nuevo = addMonths(x.vence, PER[x.per] * np);
+  const late = daysBetween(today(), nuevo) < 0;
+  const setN = n => { n = Math.min(24, Math.max(1, n)); setNp(n); setImporte((x.cuota * n).toFixed(2)); };
+  const save = e => {
+    e.preventDefault();
+    x.pagos.push({ fecha, importe: numVal(importe), periodos: np });
+    x.vence = nuevo;
+    store.commit(); app.closeSheet(); toast('Pago registrado');
+  };
+  return (
+    <Sheet title="Cobrar cuota" action={{ label: 'Registrar', form: 'cobro-form' }}>
+      <div className="flex items-center gap-3.5">
+        <Avatar name={x.nombre} />
+        <div className="min-w-0">
+          <p className="truncate text-[18px] font-semibold">{x.nombre}</p>
+          <p className="text-[14px] text-mute">Cuota {x.per} de {eur(x.cuota)}, pagada hasta {fdate(x.vence)}</p>
+        </div>
+      </div>
+      <form id="cobro-form" onSubmit={save} className="space-y-6">
+        <FormGroup>
+          <div className="flex min-h-[3.1rem] items-center justify-between gap-3 px-4">
+            <span className="text-[16px]">Cuotas que paga</span>
+            <div className="flex items-center rounded-full bg-fill p-0.5">
+              <button type="button" aria-label="Menos cuotas" onClick={() => setN(np - 1)} className="grid size-9 place-items-center rounded-full transition active:scale-90"><I.minus className="size-[18px]" strokeWidth="2.4" /></button>
+              <b className="min-w-[2.5rem] text-center text-[17px] font-semibold">{np}</b>
+              <button type="button" aria-label="Más cuotas" onClick={() => setN(np + 1)} className="grid size-9 place-items-center rounded-full transition active:scale-90"><I.plus className="size-[18px]" strokeWidth="2.4" /></button>
+            </div>
+          </div>
+          <FRow label="Importe (€)"><input type="number" inputMode="decimal" min="0" step="0.01" required value={importe} onChange={e => setImporte(e.target.value)} className={inp} /></FRow>
+          <FRow label="Fecha del pago"><input type="date" required value={fecha} onChange={e => setFecha(e.target.value)} className={inp} /></FRow>
+        </FormGroup>
+      </form>
+      <div className={`rounded-[22px] p-5 text-center transition-colors duration-300 ${late ? 'bg-warn/20' : 'bg-ok/15'}`}>
+        <p className="text-[14px] text-mute">Quedará pagada hasta</p>
+        <p className={`mt-1 text-[28px] font-bold tracking-tight ${late ? 'text-warn' : 'text-ok'}`}>{fdate(nuevo)}</p>
+        {late && <p className="mt-1 text-[13px] text-mute">Seguirá con la cuota vencida.</p>}
+      </div>
+    </Sheet>
+  );
+}
+
+/* ---- Producto ---- */
+function ProdSheet({ id, tipo: tipo0 }) {
+  useDB();
+  const app = useApp(), db = store.db;
+  const p = id ? db.productos.find(x => x.id === id) : null;
+  const [f, setF] = useState(() => ({ nombre: p?.nombre || '', cat: p?.cat || '', unidad: p?.unidad || 'ud', cant: '', min: p ? String(p.min) : '', coste: p ? String(p.coste) : '', precio: p ? String(p.precio) : '' }));
+  const [m, setM] = useState({ tipo: tipo0 || 'entrada', n: '', nota: '' });
+  const numRef = useRef(null);
+  useEffect(() => { if (tipo0 && numRef.current) numRef.current.focus(); }, []);
+  if (id && !p) return null;
+  const set = k => e => setF(s => ({ ...s, [k]: e.target.value }));
+  const cats = [...new Set(db.productos.map(x => x.cat).filter(Boolean))];
+  const save = e => {
+    e.preventDefault();
+    const nombre = f.nombre.trim();
+    if (!nombre) return toast('Escribe el nombre del producto', 'bad');
+    const data = { nombre, cat: f.cat.trim(), unidad: f.unidad.trim() || 'ud', min: numVal(f.min), coste: numVal(f.coste), precio: numVal(f.precio) };
+    if (p) Object.assign(p, data);
+    else {
+      const np = { id: uid(), cant: 0, ...data };
+      db.productos.push(np);
+      const c = numVal(f.cant);
+      if (c > 0) mover(np, 'entrada', c, 'Stock inicial');
+    }
+    store.commit(); app.closeSheet(); toast(p ? 'Cambios guardados' : 'Producto añadido');
+  };
+  const registrar = e => {
+    e.preventDefault();
+    const err = mover(p, m.tipo, m.n, m.nota.trim());
+    if (err) return toast(err, 'bad');
+    setM(s => ({ ...s, n: '', nota: '' })); toast('Movimiento registrado');
+  };
+  const borrar = async () => {
+    if (await app.ask({ title: `¿Eliminar ${p.nombre}?`, message: 'Se borrarán también todos sus movimientos. No se puede deshacer.', confirmLabel: 'Eliminar', destructive: true })) {
+      db.productos = db.productos.filter(x => x.id !== p.id); db.movs = db.movs.filter(mv => mv.prod !== p.id); store.commit(); app.closeSheet(); toast('Producto eliminado');
+    }
+  };
+  const es = p ? estadoProd(p) : null;
+  const movs = p ? db.movs.filter(mv => mv.prod === p.id).slice(-12).reverse() : [];
+  const fdt = s => new Date(s).toLocaleString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  return (
+    <Sheet title={p ? p.nombre : 'Nuevo producto'} action={{ label: 'Guardar', form: 'prod-form' }}>
+      {p && (
+        <div className="rounded-[22px] bg-card p-5 text-center">
+          <p className="text-[56px] font-bold leading-none tracking-tight">{fmtN(p.cant)}<span className="ml-1.5 text-[20px] font-semibold text-mute">{p.unidad}</span></p>
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-2.5">
+            <Pill kind={{ ok: 'ok', bajo: 'warn', agotado: 'bad' }[es]}>{{ ok: 'En stock', bajo: 'Por reponer', agotado: 'Agotado' }[es]}</Pill>
+            <span className="text-[14px] text-mute">Valor a coste: {eur(p.cant * p.coste)}</span>
+          </div>
+        </div>
+      )}
+      {p && (
+        <form onSubmit={registrar} className="space-y-3">
+          <div className="flex justify-center"><Segmented label="Tipo de movimiento" value={m.tipo} onChange={tipo => setM(s => ({ ...s, tipo }))} options={Object.entries(TIPOS)} /></div>
+          <FormGroup hint={{ entrada: 'Compra o reposición: suma al stock.', salida: 'Consumo o venta: resta del stock.', merma: 'Rotura o caducado: resta del stock.', ajuste: 'Escribe la cantidad total que hay ahora.' }[m.tipo]}>
+            <FRow label={m.tipo === 'ajuste' ? 'Cantidad total' : 'Cantidad'}><input ref={numRef} type="number" inputMode="decimal" min="0" step="any" required value={m.n} onChange={e => setM(s => ({ ...s, n: e.target.value }))} placeholder="0" className={inp} /></FRow>
+            <FRow label="Nota"><input maxLength="80" value={m.nota} onChange={e => setM(s => ({ ...s, nota: e.target.value }))} placeholder="Opcional" className={inp} /></FRow>
+          </FormGroup>
+          <Btn kind="primary" type="submit" className="w-full">Registrar movimiento</Btn>
+        </form>
+      )}
+      <form id="prod-form" onSubmit={save} className="space-y-6">
+        <FormGroup title={p ? 'Datos del producto' : undefined}>
+          <FRow label="Nombre"><input required maxLength="80" value={f.nombre} onChange={set('nombre')} placeholder="Nombre del producto" className={inp} autoFocus={!p} /></FRow>
+          <FRow label="Categoría"><input list="cats" maxLength="40" value={f.cat} onChange={set('cat')} placeholder="Opcional" className={inp} /><datalist id="cats">{cats.map(c => <option key={c} value={c} />)}</datalist></FRow>
+          <FRow label="Unidad"><input maxLength="14" value={f.unidad} onChange={set('unidad')} placeholder="ud, botella, caja, kg, l…" className={inp} /></FRow>
+          {!p && <FRow label="Cantidad inicial"><input type="number" inputMode="decimal" min="0" step="any" value={f.cant} onChange={set('cant')} placeholder="0" className={inp} /></FRow>}
+          <FRow label="Mínimo"><input type="number" inputMode="decimal" min="0" step="any" value={f.min} onChange={set('min')} placeholder="0" className={inp} /></FRow>
+        </FormGroup>
+        <FormGroup title="Precios">
+          <FRow label="Coste por unidad"><input type="number" inputMode="decimal" min="0" step="0.01" value={f.coste} onChange={set('coste')} placeholder="0,00 €" className={inp} /></FRow>
+          <FRow label="Precio de venta"><input type="number" inputMode="decimal" min="0" step="0.01" value={f.precio} onChange={set('precio')} placeholder="0,00 €" className={inp} /></FRow>
+        </FormGroup>
+      </form>
+      {p && (
+        <>
+          <FormGroup title="Últimos movimientos">
+            {movs.length ? movs.map(mv => (
+              <div key={mv.id} className="flex items-center justify-between gap-3 px-4 py-3 text-[15px]">
+                <span className="min-w-0">{TIPOS[mv.tipo] || mv.tipo}{mv.nota ? `, ${mv.nota}` : ''}<span className="block text-[13px] text-mute">{fdt(mv.fecha)}</span></span>
+                <b className={`font-semibold ${mv.delta > 0 ? 'text-ok' : 'text-bad'}`}>{mv.delta > 0 ? '+' : ''}{fmtN(mv.delta)}</b>
+              </div>
+            )) : <Empty>Todavía no hay movimientos.</Empty>}
+          </FormGroup>
+          <FormGroup><SettingRow icon={I.trash} tint="bg-[#FF3B30]" label="Eliminar producto" danger onClick={borrar} /></FormGroup>
+        </>
+      )}
+    </Sheet>
+  );
+}
+
+/* ---- Ajustes ---- */
+function AjustesSheet() {
+  useDB();
+  const app = useApp(), db = store.db;
+  const [f, setF] = useState({ nombre: db.club.nombre, cuota: String(db.club.cuota || '') });
+  const file = useRef(null);
+  const save = e => {
+    e.preventDefault();
+    db.club.nombre = f.nombre.trim() || 'Mi club'; db.club.cuota = numVal(f.cuota);
+    store.commit(); app.closeSheet(); toast('Ajustes guardados');
+  };
+  const restore = async ev => {
+    const fl = ev.target.files[0]; if (!fl) return;
+    try {
+      const d = JSON.parse(await fl.text());
+      if (!Array.isArray(d.socios) || !Array.isArray(d.productos)) throw new Error('formato');
+      if (await app.ask({ title: '¿Restaurar esta copia?', message: 'Sustituirá todos los datos actuales por los de la copia.', confirmLabel: 'Restaurar' })) {
+        store.db = normalize(d); store.commit(); app.closeSheet(); toast('Copia restaurada');
+      }
+    } catch { toast('El archivo no es una copia válida de esta aplicación', 'bad'); }
+    ev.target.value = '';
+  };
+  const ejemplo = async () => {
+    if ((db.socios.length || db.productos.length) && !(await app.ask({ title: '¿Añadir datos de ejemplo?', message: 'Se sumarán a los datos que ya tienes.', confirmLabel: 'Añadir' }))) return;
+    cargarEjemplo(); app.closeSheet(); toast('Datos de ejemplo cargados');
+  };
+  const borrar = async () => {
+    if (await app.ask({ title: '¿Borrar todos los datos?', message: 'Se eliminarán socios, productos y movimientos de este navegador. Descarga antes una copia si no quieres perderlos.', confirmLabel: 'Borrar todo', destructive: true, requireText: 'BORRAR' })) {
+      store.db = blank(); store.commit(); app.closeSheet(); toast('Datos borrados');
+    }
+  };
+  return (
+    <Sheet title="Copias y ajustes" action={{ label: 'Guardar', form: 'club-form' }}>
+      <form id="club-form" onSubmit={save}>
+        <FormGroup title="Tu club">
+          <FRow label="Nombre"><input maxLength="60" value={f.nombre} onChange={e => setF(s => ({ ...s, nombre: e.target.value }))} className={inp} /></FRow>
+          <FRow label="Cuota habitual"><input type="number" inputMode="decimal" min="0" step="0.01" value={f.cuota} onChange={e => setF(s => ({ ...s, cuota: e.target.value }))} placeholder="0,00 €" className={inp} /></FRow>
+        </FormGroup>
+      </form>
+      <FormGroup title="Copia de seguridad" hint="Los cambios se sincronizan con Supabase al iniciar sesión. Descarga también una copia de seguridad de vez en cuando.">
+        <SettingRow icon={I.download} tint="bg-[#0A84FF]" label="Descargar copia" sub={db.ultimaCopia ? `Última copia: ${fdate(db.ultimaCopia)}` : 'Todavía no has descargado ninguna'} onClick={backup} />
+        <SettingRow icon={I.upload} tint="bg-[#5E5CE6]" label="Restaurar copia" onClick={() => file.current && file.current.click()} />
+        <input ref={file} type="file" accept=".json,application/json" hidden onChange={restore} />
+      </FormGroup>
+      <FormGroup title="Pasar a Excel">
+        <SettingRow icon={I.table} tint="bg-[#30B454]" label="Lista de socios" onClick={exportSocios} />
+        <SettingRow icon={I.table} tint="bg-[#FF9500]" label="Lista de stock" onClick={exportStock} />
+      </FormGroup>
+      <FormGroup title="Cuenta del club">
+        <SettingRow icon={I.logout} tint="bg-[#8E8E93]" label="Cerrar sesión" sub="Volverás a la pantalla de acceso" onClick={() => { app.closeSheet(); app.logout(); }} />
+      </FormGroup>
+      <FormGroup title="Datos">
+        <SettingRow icon={I.star} tint="bg-[#8E8E93]" label="Cargar datos de ejemplo" onClick={ejemplo} />
+        <SettingRow icon={I.trash} tint="bg-[#FF3B30]" label="Borrar todos los datos" danger onClick={borrar} />
+      </FormGroup>
+    </Sheet>
+  );
+}
+
+function SheetHost({ sheet }) {
+  switch (sheet.type) {
+    case 'socio': return <SocioSheet key={sheet.id || 'nuevo'} id={sheet.id} />;
+    case 'cobro': return <CobroSheet key={'c' + sheet.id} id={sheet.id} />;
+    case 'prod': return <ProdSheet key={sheet.id || 'nuevo'} id={sheet.id} tipo={sheet.tipo} />;
+    case 'ajustes': return <AjustesSheet />;
+    default: return null;
+  }
+}
+
+/* =====================  Diálogo de confirmación (alerta iOS)  ===================== */
+function ConfirmDialog({ d, onDone }) {
+  const [shown, setShown] = useState(false);
+  const [txt, setTxt] = useState('');
+  const inputRef = useRef(null);
+  useEffect(() => { const r = requestAnimationFrame(() => { setShown(true); inputRef.current?.focus(); }); return () => cancelAnimationFrame(r); }, []);
+  const ok = !d.requireText || txt.trim().toUpperCase() === d.requireText;
+  const finish = v => { if (v && !ok) return; setShown(false); setTimeout(() => onDone(v), 190); };
+  useEffect(() => {
+    const onKey = e => { if (e.key === 'Escape') { e.stopPropagation(); finish(false); } };
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
+  });
+  return (
+    <div data-top-overlay className="fixed inset-0 z-[70] grid place-items-center p-6">
+      <div className={`absolute inset-0 bg-black/40 transition-opacity duration-200 ${shown ? 'opacity-100' : 'opacity-0'}`} />
+      <div role="alertdialog" aria-modal="true" aria-label={d.title}
+        className={`glass relative w-[min(300px,calc(100vw-48px))] overflow-hidden rounded-[22px] border border-edge text-center shadow-2xl transition-[scale,opacity] duration-200 ease-[var(--ease-apple)] ${shown ? 'scale-100 opacity-100' : 'scale-110 opacity-0'}`}>
+        <div className="px-5 pb-4 pt-5">
+          <h3 className="text-[17px] font-semibold leading-snug">{d.title}</h3>
+          {d.message && <p className="mt-1.5 text-[13.5px] leading-snug text-mute">{d.message}</p>}
+          {d.requireText && (
+            <input ref={inputRef} value={txt} onChange={e => setTxt(e.target.value)} onKeyDown={e => e.key === 'Enter' && finish(true)} placeholder={`Escribe ${d.requireText}`} aria-label={`Escribe ${d.requireText} para confirmar`}
+              className="mt-3.5 h-10 w-full rounded-[10px] bg-fill px-3 text-center text-[15px] outline-none focus:ring-2 focus:ring-accent/50" />
+          )}
+        </div>
+        <div className="grid grid-cols-2 border-t border-line text-[17px]">
+          <button onClick={() => finish(false)} className="h-11 border-r border-line transition-colors hover:bg-fill/60 active:bg-fill">Cancelar</button>
+          <button onClick={() => finish(true)} disabled={!ok} className={`h-11 font-semibold transition-colors hover:bg-fill/60 active:bg-fill disabled:opacity-40 ${d.destructive ? 'text-bad' : 'text-accent'}`}>{d.confirmLabel || 'Aceptar'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =====================  Spotlight (búsqueda universal)  ===================== */
+function Spotlight({ onClose }) {
+  useDB();
+  const app = useApp(), db = store.db;
+  const [q, setQ] = useState('');
+  const [idx, setIdx] = useState(0);
+  const [shown, setShown] = useState(false);
+  const inputRef = useRef(null), listRef = useRef(null);
+  useEffect(() => { const r = requestAnimationFrame(() => { setShown(true); inputRef.current?.focus(); }); return () => cancelAnimationFrame(r); }, []);
+  const close = after => { setShown(false); setTimeout(() => { onClose(); after && after(); }, 190); };
+
+  const groups = useMemo(() => {
+    const n = norm(q.trim());
+    const g = [];
+    const acts = app.actions.filter(a => !n || norm(a.label).includes(n)).map(a => ({ key: a.id, label: a.label, icon: <span className={`grid size-8 place-items-center rounded-[9px] text-white ${a.tint}`}><a.icon className="size-[18px]" /></span>, run: a.run }));
+    if (!n) {
+      const venc = db.socios.filter(x => estado(x) === 'vencida').sort((a, b) => a.vence.localeCompare(b.vence)).slice(0, 3);
+      if (venc.length) g.push({ title: 'Cuotas por cobrar', items: venc.map(x => ({ key: 'v' + x.id, label: `Cobrar a ${x.nombre}`, sub: `Vencida hace ${plural(-daysBetween(today(), x.vence), 'día', 'días')}`, icon: <Avatar name={x.nombre} size="size-8 text-[12px]" />, run: () => app.openSheet({ type: 'cobro', id: x.id }) })) });
+    }
+    if (acts.length) g.push({ title: 'Acciones', items: acts });
+    if (n) {
+      const soc = db.socios.filter(x => norm([x.nombre, x.tel, x.email, x.num].join(' ')).includes(n)).slice(0, 5)
+        .map(x => ({ key: 's' + x.id, label: x.nombre, sub: `Socio nº ${x.num}${x.tel ? ', ' + x.tel : ''}`, icon: <Avatar name={x.nombre} dim={x.baja} size="size-8 text-[12px]" />, run: () => app.openSheet({ type: 'socio', id: x.id }) }));
+      const pro = db.productos.filter(p => norm(p.nombre + ' ' + p.cat).includes(n)).slice(0, 5)
+        .map(p => ({ key: 'p' + p.id, label: p.nombre, sub: `${fmtN(p.cant)} ${p.unidad}${p.cat ? ', ' + p.cat : ''}`, icon: <Tile name={p.cat || p.nombre} text={p.nombre} size="size-8 text-[13px]" />, run: () => app.openSheet({ type: 'prod', id: p.id }) }));
+      if (soc.length) g.push({ title: 'Socios', items: soc });
+      if (pro.length) g.push({ title: 'Productos', items: pro });
+    }
+    return g;
+  }, [q, store.v, app.actions]);
+  const flat = groups.flatMap(g => g.items);
+  useEffect(() => { setIdx(0); }, [q]);
+  useEffect(() => { listRef.current?.querySelector('[data-active="true"]')?.scrollIntoView({ block: 'nearest' }); }, [idx]);
+  const run = it => it && close(it.run);
+  const onKey = e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setIdx(i => flat.length ? (i + 1) % flat.length : 0); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setIdx(i => flat.length ? (i - 1 + flat.length) % flat.length : 0); }
+    else if (e.key === 'Enter') { e.preventDefault(); run(flat[idx]); }
+    else if (e.key === 'Escape') { e.preventDefault(); close(); }
+  };
+  let n = -1;
+  return (
+    <div data-top-overlay className="fixed inset-0 z-[60] flex items-start justify-center px-4 pt-[10vh] sm:pt-[14vh]">
+      <div onClick={() => close()} className={`absolute inset-0 bg-black/30 backdrop-blur-[3px] transition-opacity duration-200 ${shown ? 'opacity-100' : 'opacity-0'}`} />
+      <div role="dialog" aria-modal="true" aria-label="Buscar"
+        className={`glass relative w-full max-w-[600px] overflow-hidden rounded-[24px] border border-edge shadow-2xl transition-[translate,scale,opacity] duration-300 ease-[var(--ease-apple)] ${shown ? 'translate-y-0 scale-100 opacity-100' : '-translate-y-3 scale-95 opacity-0'}`}>
+        <div className="flex items-center gap-3 px-5">
+          <I.search className="size-5 shrink-0 text-mute" />
+          <input ref={inputRef} value={q} onChange={e => setQ(e.target.value)} onKeyDown={onKey} placeholder="Buscar socios, productos o acciones" aria-label="Buscar"
+            className="h-14 min-w-0 flex-1 bg-transparent text-[19px] outline-none placeholder:text-mute" />
+          <kbd className="hidden rounded-md bg-fill px-1.5 py-0.5 text-[11px] font-medium text-mute sm:block">esc</kbd>
+        </div>
+        <div ref={listRef} className="max-h-[52vh] overflow-y-auto overscroll-contain border-t border-line p-2">
+          {groups.length === 0 && <p className="px-4 py-8 text-center text-[15px] text-mute">Sin resultados para «{q}»</p>}
+          {groups.map(g => (
+            <div key={g.title} className="pb-1">
+              <p className="px-3 pb-1 pt-2 text-[13px] font-semibold text-mute">{g.title}</p>
+              {g.items.map(it => {
+                n++; const i = n, act = i === idx;
+                return (
+                  <button key={it.key} data-active={act} onMouseMove={() => idx !== i && setIdx(i)} onClick={() => run(it)}
+                    className={`flex w-full items-center gap-3 rounded-[13px] px-3 py-2 text-left transition-colors duration-100 ${act ? 'bg-accent text-white' : ''}`}>
+                    {it.icon}
+                    <span className="min-w-0 flex-1"><span className="block truncate text-[16px] font-medium">{it.label}</span>{it.sub && <span className={`block truncate text-[13px] ${act ? 'text-white/75' : 'text-mute'}`}>{it.sub}</span>}</span>
+                    {act && <span className="text-[12px] text-white/75">↵</span>}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =====================  Menú: Dock con efecto lupa  ===================== */
+function Dock({ tab, go, onSearch, onSettings, openSheet }) {
+  const wrap = useRef(null), refs = useRef({}), raf = useRef(0);
+  const [menu, setMenu] = useState(false);
+  const order = ['resumen', 'socios', 'stock', 'buscar', 'nuevo', 'ajustes'];
+
+  const items = {
+    resumen: { label: 'Resumen', icon: I.home, g: 'from-[#5AC8FA] to-[#0A7AFF]', run: () => go('resumen') },
+    socios: { label: 'Socios', icon: I.users, g: 'from-[#6EE08A] to-[#1FA84A]', run: () => go('socios') },
+    stock: { label: 'Stock', icon: I.box, g: 'from-[#FFC04D] to-[#FF8A00]', run: () => go('stock') },
+    buscar: { label: 'Buscar', icon: I.search, g: 'from-[#A1A1A8] to-[#6C6C72]', run: onSearch },
+    nuevo: { label: 'Nuevo', icon: I.plus, g: 'from-[#C77DFF] to-[#6E5CE6]', run: () => setMenu(m => !m) },
+    ajustes: { label: 'Ajustes', icon: I.sliders, g: 'from-[#8E8E93] to-[#48484A]', run: onSettings }
+  };
+
+  const geometry = e => {
+    if (e.pointerType !== 'mouse' || reduce || !wrap.current) return;
+    const x = e.clientX, left = wrap.current.getBoundingClientRect().left;
+    cancelAnimationFrame(raf.current);
+    raf.current = requestAnimationFrame(() => {
+      const els = order.map(k => refs.current[k]).filter(Boolean);
+      if (!els.length) return;
+      const base = els[0].offsetWidth;
+      const sc = els.map(el => 1 + 0.62 * Math.exp(-Math.pow(x - left - (el.offsetLeft + el.offsetWidth / 2), 2) / (2 * 50 * 50)));
+      const extra = sc.map(s => (s - 1) * base), total = extra.reduce((a, b) => a + b, 0);
+      let acc = 0;
+      els.forEach((el, i) => { const sh = acc + extra[i] / 2 - total / 2; acc += extra[i]; el.firstChild.style.transform = `translateX(${sh}px) scale(${sc[i]})`; });
+    });
+  };
+  const leave = () => {
+    cancelAnimationFrame(raf.current);
+    order.forEach(k => { const el = refs.current[k]; if (el) el.firstChild.style.transform = ''; });
+  };
+  useEffect(() => {
+    if (!menu) return;
+    const out = e => { if (!e.target.closest('[data-new-menu],[data-new-btn]')) setMenu(false); };
+    const esc = e => { if (e.key === 'Escape') setMenu(false); };
+    document.addEventListener('pointerdown', out); window.addEventListener('keydown', esc);
+    return () => { document.removeEventListener('pointerdown', out); window.removeEventListener('keydown', esc); };
+  }, [menu]);
+
+  const Item = ({ k }) => {
+    const it = items[k], Ic = it.icon, active = tab === k;
+    return (
+      <div ref={el => { refs.current[k] = el; }} className="group relative h-[46px] w-[46px] shrink-0 sm:h-[54px] sm:w-[54px]" {...(k === 'nuevo' ? { 'data-new-btn': true } : {})}>
+        <button onClick={it.run} aria-label={it.label} aria-current={active ? 'page' : undefined}
+          className={`absolute inset-x-0 bottom-0 grid aspect-square origin-bottom place-items-center rounded-[23%] bg-gradient-to-b ${it.g} text-white shadow-[0_6px_14px_rgba(0,0,0,.28),inset_0_1px_0_rgba(255,255,255,.4)] transition-transform duration-150 ease-out`}>
+          <Ic className="size-[50%]" strokeWidth="2.2" />
+        </button>
+        <span className="pointer-events-none absolute -top-[4.4rem] left-1/2 -translate-x-1/2 scale-90 whitespace-nowrap rounded-lg border border-edge bg-glass px-2.5 py-1 text-[12.5px] font-medium opacity-0 shadow-lg backdrop-blur-xl transition duration-150 group-hover:scale-100 group-hover:opacity-100">{it.label}</span>
+        <span className={`absolute -bottom-[9px] left-1/2 size-1 -translate-x-1/2 rounded-full bg-ink/70 transition-opacity duration-300 ${active ? 'opacity-100' : 'opacity-0'}`} />
+      </div>
+    );
+  };
+  return (
+    <nav aria-label="Menú principal" className="fixed bottom-[max(12px,env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2">
+      {menu && (
+        <div data-new-menu role="menu" className="anim-menu glass absolute bottom-full left-1/2 mb-[4.8rem] w-64 -translate-x-1/2 overflow-hidden rounded-[20px] border border-edge p-1.5 shadow-2xl">
+          {[
+            { l: 'Nuevo socio', i: I.users, t: 'bg-[#30B454]', r: () => openSheet({ type: 'socio' }) },
+            { l: 'Nuevo producto', i: I.box, t: 'bg-[#FF9500]', r: () => openSheet({ type: 'prod' }) },
+            { l: 'Descargar copia', i: I.download, t: 'bg-[#0A84FF]', r: backup }
+          ].map(m => (
+            <button key={m.l} role="menuitem" onClick={() => { setMenu(false); m.r(); }} className="flex w-full items-center gap-3 rounded-[14px] px-2.5 py-2 text-left text-[16px] transition-colors hover:bg-fill active:bg-fill">
+              <span className={`grid size-8 place-items-center rounded-[9px] text-white ${m.t}`}><m.i className="size-[18px]" /></span>{m.l}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="anim-dock">
+        <div ref={wrap} onPointerMove={geometry} onPointerLeave={leave}
+          className="glass relative flex items-end gap-2 rounded-[30px] border border-edge px-3 pb-[1.15rem] pt-2.5 shadow-[0_20px_50px_rgba(0,0,0,.22)] sm:gap-2.5 sm:px-3.5">
+          <Item k="resumen" /><Item k="socios" /><Item k="stock" />
+          <span className="mx-1 mb-1 h-9 w-px self-center bg-line" aria-hidden="true" />
+          <Item k="buscar" /><Item k="nuevo" /><Item k="ajustes" />
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+/* =====================  Barra superior  ===================== */
+function TopBar({ tab, scrolled, showTitle, onSearch }) {
+  const db = useDB();
+  return (
+    <header className="fixed inset-x-0 top-0 z-30">
+      <div aria-hidden="true" className={`glass absolute inset-0 border-b border-edge transition-opacity duration-300 ${scrolled ? 'opacity-100' : 'opacity-0'}`} />
+      <div className="relative mx-auto flex h-[54px] max-w-4xl items-center justify-between gap-3 px-4 sm:px-6">
+        <div className="flex min-w-0 items-center gap-2.5">
+          <span className="grid size-8 shrink-0 place-items-center rounded-[10px] bg-gradient-to-br from-[#5AC8FA] to-[#0A7AFF] text-[15px] font-bold text-white shadow-sm">{(db.club.nombre.trim()[0] || 'C').toUpperCase()}</span>
+          <span className="max-w-[32vw] truncate text-[17px] font-semibold tracking-tight sm:max-w-none">{db.club.nombre}</span>
+        </div>
+        <span aria-hidden={!showTitle} className={`pointer-events-none absolute left-1/2 hidden -translate-x-1/2 text-[17px] font-semibold transition-all duration-300 min-[480px]:block ${showTitle ? 'translate-y-0 opacity-100' : 'translate-y-1.5 opacity-0'}`}>{TAB_NAMES[tab]}</span>
+        <button onClick={onSearch} aria-label="Buscar" className="flex h-9 items-center gap-2 rounded-full bg-fill px-3 text-[14px] text-mute transition active:scale-95 hover:bg-fill/70">
+          <I.search className="size-4" /><span className="hidden sm:inline">Buscar</span>
+          <kbd className="hidden rounded-md bg-card px-1.5 text-[11px] font-medium md:inline">{MAC ? '⌘K' : 'Ctrl K'}</kbd>
+        </button>
+      </div>
+    </header>
+  );
+}
+
+/* =====================  Vistas  ===================== */
+function ListRowBase({ i, onOpen, lead, children }) {
+  return (
+    <div data-row onClick={onOpen} style={{ animationDelay: Math.min(i, 12) * 35 + 'ms' }}
+      className="anim-rise flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors hover:bg-fill/60 active:bg-fill">
+      <button type="button" onClick={e => { e.stopPropagation(); onOpen(); }} className="flex min-w-0 flex-1 items-center gap-3 rounded-lg text-left">{lead}</button>
+      {children}
+    </div>
+  );
+}
+
+function SocioRow({ x, i }) {
+  const { openSheet } = useApp();
+  const e = estado(x), d = daysBetween(today(), x.vence);
+  const label = { alcorriente: 'Al corriente', porvencer: d === 0 ? 'Vence hoy' : `Vence en ${plural(d, 'día', 'días')}`, vencida: `Vencida hace ${plural(-d, 'día', 'días')}`, baja: 'Baja' }[e];
+  const kind = { alcorriente: 'ok', porvencer: 'warn', vencida: 'bad', baja: 'mute' }[e];
+  return (
+    <ListRowBase i={i} onOpen={() => openSheet({ type: 'socio', id: x.id })} lead={<>
+      <Avatar name={x.nombre} dim={x.baja} />
+      <span className="block min-w-0 flex-1">
+        <span className="block truncate text-[16px] font-semibold">{x.nombre}</span>
+        <span className="block truncate text-[13.5px] text-mute">{eur(x.cuota)} {x.per}{!x.baja && <span className="hidden sm:inline">{`, pagada hasta ${fdate(x.vence)}`}</span>}</span>
+      </span></>}>
+      <div className="flex flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
+        <Pill kind={kind}>{label}</Pill>
+        {!x.baja && <Btn size="sm" kind={e === 'vencida' ? 'primary' : 'tint'} onClick={ev => { ev.stopPropagation(); openSheet({ type: 'cobro', id: x.id }); }}>Cobrar</Btn>}
+      </div>
+      <I.chevron className="hidden size-4 shrink-0 text-mute/60 sm:block" />
+    </ListRowBase>
+  );
+}
+
+function ProdRow({ p, i }) {
+  const { openSheet } = useApp();
+  const e = estadoProd(p);
+  const pct = p.min > 0 ? Math.min(100, Math.round(p.cant / Math.max(p.min * 2, p.cant, 1) * 100)) : 0;
+  const bar = { ok: 'bg-ok', bajo: 'bg-warn', agotado: 'bg-bad' }[e];
+  return (
+    <ListRowBase i={i} onOpen={() => openSheet({ type: 'prod', id: p.id })} lead={<>
+      <Tile name={p.cat || p.nombre} text={p.nombre} />
+      <span className="block min-w-0 flex-1">
+        <span className="block truncate text-[16px] font-semibold">{p.nombre}</span>
+        <span className="block truncate text-[13.5px] text-mute">
+          {e === 'agotado' ? <span className="font-semibold text-bad">Agotado</span> : e === 'bajo' ? <span className="font-semibold text-warn">Por reponer</span> : (p.cat || 'Sin categoría')}
+          {p.coste > 0 && `, ${eur(p.cant * p.coste)} a coste`}
+        </span>
+        {p.min > 0 && <span className="mt-1.5 block h-1.5 w-full max-w-[170px] overflow-hidden rounded-full bg-fill"><span className="anim-grow block h-full w-full"><span className={`block h-full rounded-full transition-[width] duration-700 ease-[var(--ease-apple)] ${bar}`} style={{ width: Math.max(pct, e === 'agotado' ? 0 : 4) + '%' }} /></span></span>}
+      </span></>}>
+      <Stepper p={p} />
+    </ListRowBase>
+  );
+}
+
+function ResumenView() {
+  useDB();
+  const { openSheet } = useApp(), db = store.db;
+  const on = useReady();
+  const byVence = (a, b) => a.vence.localeCompare(b.vence);
+  const venc = db.socios.filter(x => estado(x) === 'vencida').sort(byVence);
+  const pv = db.socios.filter(x => estado(x) === 'porvencer').sort(byVence);
+  const rep = db.productos.filter(p => estadoProd(p) !== 'ok').sort((a, b) => a.cant - b.cant);
+  const activos = db.socios.filter(x => !x.baja);
+  const alDia = activos.length - venc.length;
+  const pct = activos.length ? alDia / activos.length : 1;
+  const valor = db.productos.reduce((t, p) => t + p.cant * p.coste, 0);
+  const pendiente = venc.reduce((t, x) => t + x.cuota, 0);
+  const base = today().slice(0, 7) + '-01';
+  const months = Array.from({ length: 6 }, (_, i) => { const key = addMonths(base, i - 5).slice(0, 7); return { key, label: new Date(key + '-01T00:00').toLocaleDateString('es-ES', { month: 'short' }).replace('.', ''), total: 0 }; });
+  db.socios.forEach(s => s.pagos.forEach(p => { const m = months.find(m => p.fecha.startsWith(m.key)); if (m) m.total += p.importe; }));
+  const max = Math.max(...months.map(m => m.total), 1), mes = months[5].total;
+  const h = new Date().getHours();
+  const saludo = h < 6 ? 'Buenas noches' : h < 13 ? 'Buenos días' : h < 21 ? 'Buenas tardes' : 'Buenas noches';
+  const partes = [venc.length && plural(venc.length, 'cuota vencida', 'cuotas vencidas'), rep.length && plural(rep.length, 'producto por reponer', 'productos por reponer')].filter(Boolean);
+  const sub = partes.length ? partes.join(' y ') + '.' : 'Todo está al día.';
+  const viejo = !db.ultimaCopia || daysBetween(db.ultimaCopia, today()) > 30;
+
+  if (!db.socios.length && !db.productos.length) {
+    return (
+      <div>
+        <LargeTitle title={saludo} sub="Tu club está listo para empezar." />
+        <Card className="mt-2 text-center sm:p-10">
+          <div className="mx-auto mb-5 grid size-16 place-items-center rounded-[18px] bg-gradient-to-br from-[#5AC8FA] to-[#0A7AFF] text-white shadow-lg"><I.users className="size-8" /></div>
+          <h2 className="text-[24px] font-bold tracking-tight">Empieza con tus socios y tu stock</h2>
+          <p className="mx-auto mt-2 max-w-md text-[16px] leading-snug text-mute">Da de alta a los socios para controlar sus cuotas y añade los productos del bar o del almacén para vigilar las existencias. Si prefieres verlo funcionando antes, carga datos de ejemplo.</p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Btn kind="primary" onClick={() => openSheet({ type: 'socio' })}>Añadir el primer socio</Btn>
+            <Btn onClick={() => openSheet({ type: 'prod' })}>Añadir un producto</Btn>
+            <Btn kind="plain" onClick={() => { cargarEjemplo(); toast('Datos de ejemplo cargados'); }}>Cargar datos de ejemplo</Btn>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+  return (
+    <div className="space-y-6">
+      <LargeTitle title={saludo} sub={sub} />
+      {viejo && (
+        <div className="anim-rise flex flex-wrap items-center justify-between gap-3 rounded-[22px] bg-warn/18 px-4 py-3">
+          <p className="flex min-w-0 flex-1 items-center gap-2.5 text-[14.5px] leading-snug"><I.alert className="size-5 shrink-0 text-warn" />{db.ultimaCopia ? 'Hace más de un mes que no descargas una copia.' : 'Todavía no has descargado ninguna copia de seguridad.'} La copia descargada te permite recuperar los datos si la necesitas.</p>
+          <Btn size="sm" kind="primary" onClick={backup}>Descargar copia</Btn>
+        </div>
+      )}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <Card delay={0} className="col-span-2 flex items-center gap-5 lg:row-span-2 lg:flex-col lg:justify-center lg:text-center">
+          <div className="relative grid place-items-center">
+            <Ring pct={pct} color={venc.length ? 'var(--warn)' : 'var(--ok)'} />
+            <span className="absolute text-[28px] font-bold tracking-tight"><CountUp value={Math.round(pct * 100)} format={n => Math.round(n) + '%'} /></span>
+          </div>
+          <div>
+            <p className="text-[17px] font-semibold">Socios al corriente</p>
+            <p className="mt-0.5 text-[14.5px] leading-snug text-mute">{alDia} de {activos.length} con la cuota al día</p>
+            <div className="mt-3 flex flex-wrap gap-2 lg:justify-center">
+              {venc.length > 0 && <Pill kind="bad">{plural(venc.length, 'vencida', 'vencidas')}</Pill>}
+              {pv.length > 0 && <Pill kind="warn">{plural(pv.length, 'por vencer', 'por vencer')}</Pill>}
+              {!venc.length && !pv.length && <Pill kind="ok">Todo al día</Pill>}
+            </div>
+          </div>
+        </Card>
+        <Card delay={70} className="col-span-2">
+          <p className="text-[15px] font-semibold text-mute">Ingresos de {new Date().toLocaleDateString('es-ES', { month: 'long' })}</p>
+          <p className="mt-1 text-[34px] font-bold leading-none tracking-tight"><CountUp value={mes} format={eur} /></p>
+          <div className="mt-4 flex h-24 items-end gap-2.5" role="img" aria-label="Ingresos de los últimos seis meses">
+            {months.map((m, i) => (
+              <div key={m.key} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
+                <div className="flex w-full flex-1 items-end">
+                  <div className={`w-full rounded-[7px] transition-[height] duration-[900ms] ease-[var(--ease-apple)] ${i === 5 ? 'bg-accent' : 'bg-accent/25'}`} style={{ height: on ? Math.max(5, m.total / max * 100) + '%' : '5%', transitionDelay: i * 60 + 'ms' }} />
+                </div>
+                <span className="text-[11.5px] text-mute">{m.label}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+        <Card delay={140}>
+          <p className="text-[15px] font-semibold text-mute">Por cobrar</p>
+          <p className={`mt-1 text-[28px] font-bold leading-none tracking-tight ${pendiente ? 'text-bad' : ''}`}><CountUp value={pendiente} format={eur} /></p>
+          <p className="mt-2 text-[13.5px] text-mute">{venc.length ? plural(venc.length, 'cuota vencida', 'cuotas vencidas') : 'Sin cuotas vencidas'}</p>
+        </Card>
+        <Card delay={200}>
+          <p className="text-[15px] font-semibold text-mute">Valor del stock</p>
+          <p className="mt-1 text-[28px] font-bold leading-none tracking-tight"><CountUp value={valor} format={eur} /></p>
+          <p className="mt-2 text-[13.5px] text-mute">{plural(db.productos.length, 'producto', 'productos')}{rep.length ? `, ${rep.length} por reponer` : ''}</p>
+        </Card>
+      </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Group title="Cuotas pendientes">
+          {venc.length + pv.length === 0 && <Empty>No hay cuotas vencidas ni próximas a vencer.</Empty>}
+          {[...venc, ...pv].map((x, i) => {
+            const d = daysBetween(today(), x.vence);
+            const t = d < 0 ? `Vencida hace ${plural(-d, 'día', 'días')}` : d === 0 ? 'Vence hoy' : `Vence en ${plural(d, 'día', 'días')}`;
+            return (
+              <ListRowBase key={x.id} i={i} onOpen={() => openSheet({ type: 'socio', id: x.id })} lead={<>
+                <Avatar name={x.nombre} size="size-10" />
+                <span className="block min-w-0 flex-1"><span className="block truncate text-[16px] font-semibold">{x.nombre}</span><span className={`block truncate text-[13.5px] ${d < 0 ? 'text-bad' : 'text-warn'}`}>{t}, {eur(x.cuota)}</span></span></>}>
+                <Btn size="sm" kind={d < 0 ? 'primary' : 'tint'} onClick={ev => { ev.stopPropagation(); openSheet({ type: 'cobro', id: x.id }); }}>Cobrar</Btn>
+              </ListRowBase>
+            );
+          })}
+        </Group>
+        <Group title="Stock por reponer">
+          {rep.length === 0 && <Empty>Todo el stock está por encima del mínimo.</Empty>}
+          {rep.map((p, i) => (
+            <ListRowBase key={p.id} i={i} onOpen={() => openSheet({ type: 'prod', id: p.id })} lead={<>
+              <Tile name={p.cat || p.nombre} text={p.nombre} size="size-10" />
+              <span className="block min-w-0 flex-1"><span className="block truncate text-[16px] font-semibold">{p.nombre}</span><span className={`block truncate text-[13.5px] ${p.cant <= 0 ? 'text-bad' : 'text-warn'}`}>{p.cant <= 0 ? 'Agotado' : `Quedan ${fmtN(p.cant)} ${p.unidad}`}, mínimo {fmtN(p.min)}</span></span></>}>
+              <Btn size="sm" onClick={ev => { ev.stopPropagation(); openSheet({ type: 'prod', id: p.id, tipo: 'entrada' }); }}>Reponer</Btn>
+            </ListRowBase>
+          ))}
+        </Group>
+      </div>
+    </div>
+  );
+}
+
+function SociosView({ q, setQ, f, setF }) {
+  useDB();
+  const { openSheet } = useApp(), db = store.db;
+  const n = norm(q);
+  const arr = db.socios.filter(x => {
+    const e = estado(x);
+    if (f === 'alcorriente' && !(e === 'alcorriente' || e === 'porvencer')) return false;
+    if (f === 'vencida' && e !== 'vencida') return false;
+    if (f === 'baja' && e !== 'baja') return false;
+    return !n || norm([x.nombre, x.tel, x.email, x.num].join(' ')).includes(n);
+  }).sort((a, b) => (a.baja - b.baja) || a.nombre.localeCompare(b.nombre, 'es'));
+  const activos = db.socios.filter(x => !x.baja).length;
+  return (
+    <div>
+      <LargeTitle title="Socios" sub={db.socios.length ? `${plural(activos, 'socio activo', 'socios activos')}${db.socios.length > activos ? `, ${plural(db.socios.length - activos, 'baja', 'bajas')}` : ''}` : 'Aún no hay socios'}
+        right={<Btn kind="primary" onClick={() => openSheet({ type: 'socio' })}><I.plus className="size-[18px]" strokeWidth="2.6" />Nuevo</Btn>} />
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <SearchField value={q} onChange={setQ} placeholder="Buscar por nombre, teléfono o número" label="Buscar socios" />
+        <div className="overflow-x-auto"><Segmented label="Filtrar socios" value={f} onChange={setF} options={[['todos', 'Todos'], ['alcorriente', 'Al corriente'], ['vencida', 'Vencidas'], ['baja', 'Bajas']]} /></div>
+      </div>
+      <div className="card-shadow divide-y divide-line overflow-hidden rounded-[22px] bg-card">
+        {arr.map((x, i) => <SocioRow key={x.id} x={x} i={i} />)}
+        {!arr.length && (db.socios.length
+          ? <Empty>Ningún socio coincide con la búsqueda o el filtro.</Empty>
+          : <Empty><p>Aún no has añadido ningún socio.</p><Btn kind="primary" className="mt-4" onClick={() => openSheet({ type: 'socio' })}>Añadir el primer socio</Btn></Empty>)}
+      </div>
+    </div>
+  );
+}
+
+function StockView({ q, setQ, f, setF }) {
+  useDB();
+  const { openSheet } = useApp(), db = store.db;
+  const n = norm(q);
+  const arr = db.productos.filter(p => {
+    if (f === 'reponer' && estadoProd(p) === 'ok') return false;
+    return !n || norm(p.nombre + ' ' + p.cat).includes(n);
+  }).sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+  const rep = db.productos.filter(p => estadoProd(p) !== 'ok').length;
+  return (
+    <div>
+      <LargeTitle title="Stock" sub={db.productos.length ? `${plural(db.productos.length, 'producto', 'productos')}${rep ? `, ${rep} por reponer` : ''}` : 'Aún no hay productos'}
+        right={<Btn kind="primary" onClick={() => openSheet({ type: 'prod' })}><I.plus className="size-[18px]" strokeWidth="2.6" />Nuevo</Btn>} />
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <SearchField value={q} onChange={setQ} placeholder="Buscar por nombre o categoría" label="Buscar productos" />
+        <Segmented label="Filtrar productos" value={f} onChange={setF} options={[['todos', 'Todos'], ['reponer', 'Por reponer']]} />
+      </div>
+      <div className="card-shadow divide-y divide-line overflow-hidden rounded-[22px] bg-card">
+        {arr.map((p, i) => <ProdRow key={p.id} p={p} i={i} />)}
+        {!arr.length && (db.productos.length
+          ? <Empty>Ningún producto coincide con la búsqueda o el filtro.</Empty>
+          : <Empty><p>Aún no has añadido ningún producto.</p><Btn kind="primary" className="mt-4" onClick={() => openSheet({ type: 'prod' })}>Añadir el primer producto</Btn></Empty>)}
+      </div>
+    </div>
+  );
+}
+
+/* =====================  Cuenta en la nube  ===================== */
+function AccountScreen({ onAuthenticated }) {
+  const [mode, setMode] = useState('register');
+  const registering = mode === 'register';
+  const [clubName, setClubName] = useState('');
+  const [owner, setOwner] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+  const [busy, setBusy] = useState(false);
+  const submit = async e => {
+    e.preventDefault(); setError(''); setNotice('');
+    const mail = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return setError('Escribe un correo electrónico válido.');
+    if (registering && !clubName.trim()) return setError('Escribe el nombre de tu club.');
+    if (registering && !owner.trim()) return setError('Escribe el nombre de la persona responsable.');
+    if (password.length < 8) return setError('La contraseña debe tener al menos 8 caracteres.');
+    if (registering && password !== confirm) return setError('Las contraseñas no coinciden.');
+    setBusy(true);
+    try {
+      if (registering) {
+        const { data, error } = await cloud.auth.signUp({
+          email: mail,
+          password,
+          options: { data: { club_name: clubName.trim(), owner: owner.trim() } }
+        });
+        if (error) throw error;
+        if (data.session) await onAuthenticated(data.session);
+        else {
+          setMode('login');
+          setNotice('Cuenta creada. Confirma el correo que te envió Supabase y después inicia sesión aquí.');
+        }
+      } else {
+        const { data, error } = await cloud.auth.signInWithPassword({ email: mail, password });
+        if (error) throw error;
+        await onAuthenticated(data.session);
+      }
+    } catch (err) { setError(err.message || 'No se pudo conectar con Supabase.'); }
+    finally { setBusy(false); }
+  };
+  return (
+    <main className="relative isolate grid min-h-dvh place-items-center overflow-hidden bg-bg px-4 py-10 text-ink">
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -left-40 -top-48 size-[560px] rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute -right-48 top-1/3 size-[600px] rounded-full bg-[#BF5AF2]/10 blur-3xl" />
+      </div>
+      <section className="anim-view card-shadow w-full max-w-[480px] rounded-[28px] bg-card p-6 sm:p-9">
+        <div className="mx-auto mb-5 grid size-14 place-items-center rounded-[17px] bg-gradient-to-br from-[#5AC8FA] to-[#0A7AFF] text-white shadow-lg"><I.users className="size-7" /></div>
+        <p className="text-center text-[13px] font-semibold uppercase tracking-[.12em] text-accent">Gestión del club</p>
+        <h1 className="mt-2 text-center text-[30px] font-bold leading-tight tracking-[-.03em]">{registering ? 'Crea la cuenta de tu club' : 'Accede a tu club'}</h1>
+        <p className="mx-auto mt-2 max-w-sm text-center text-[15px] leading-snug text-mute">{registering ? 'Registra el club una sola vez y entra desde tus navegadores con el mismo correo y contraseña.' : 'Inicia sesión para sincronizar los datos de tu club.'}</p>
+        <div className="mt-5 flex justify-center"><Segmented label="Acceso a la cuenta" value={mode} onChange={v => { setMode(v); setError(''); setNotice(''); }} options={[[ 'register', 'Crear cuenta' ], [ 'login', 'Iniciar sesión' ]]} /></div>
+        <form onSubmit={submit} className="mt-5 space-y-4">
+          {registering && <>
+            <label className="block"><span className="mb-1.5 block text-[14px] font-medium">Nombre del club</span><input required maxLength="60" autoComplete="organization" value={clubName} onChange={e => setClubName(e.target.value)} placeholder="Ej.: Club Deportivo…" className="h-12 w-full rounded-[14px] bg-fill px-4 text-[16px] outline-none placeholder:text-mute/60 focus:ring-2 focus:ring-accent/50" /></label>
+            <label className="block"><span className="mb-1.5 block text-[14px] font-medium">Persona responsable</span><input required maxLength="80" autoComplete="name" value={owner} onChange={e => setOwner(e.target.value)} placeholder="Nombre y apellidos" className="h-12 w-full rounded-[14px] bg-fill px-4 text-[16px] outline-none placeholder:text-mute/60 focus:ring-2 focus:ring-accent/50" /></label>
+          </>}
+          <label className="block"><span className="mb-1.5 block text-[14px] font-medium">Correo electrónico</span><input required type="email" autoComplete="email" maxLength="120" value={email} onChange={e => setEmail(e.target.value)} placeholder="nombre@club.es" className="h-12 w-full rounded-[14px] bg-fill px-4 text-[16px] outline-none placeholder:text-mute/60 focus:ring-2 focus:ring-accent/50" /></label>
+          <label className="block"><span className="mb-1.5 block text-[14px] font-medium">Contraseña</span><input required type="password" autoComplete={registering ? 'new-password' : 'current-password'} minLength="8" value={password} onChange={e => setPassword(e.target.value)} placeholder="Al menos 8 caracteres" className="h-12 w-full rounded-[14px] bg-fill px-4 text-[16px] outline-none placeholder:text-mute/60 focus:ring-2 focus:ring-accent/50" /></label>
+          {registering && <label className="block"><span className="mb-1.5 block text-[14px] font-medium">Repite la contraseña</span><input required type="password" autoComplete="new-password" minLength="8" value={confirm} onChange={e => setConfirm(e.target.value)} placeholder="Vuelve a escribirla" className="h-12 w-full rounded-[14px] bg-fill px-4 text-[16px] outline-none placeholder:text-mute/60 focus:ring-2 focus:ring-accent/50" /></label>}
+          {error && <p role="alert" className="rounded-[13px] bg-bad/10 px-3.5 py-3 text-[14px] text-bad">{error}</p>}
+          {notice && <p role="status" className="rounded-[13px] bg-ok/10 px-3.5 py-3 text-[14px] text-ok">{notice}</p>}
+          <button disabled={busy} className="mt-2 inline-flex h-12 w-full items-center justify-center rounded-full bg-accent px-5 text-[16px] font-semibold text-white transition hover:brightness-110 active:scale-[.98] disabled:opacity-50">{busy ? 'Conectando…' : registering ? 'Crear cuenta del club' : 'Entrar'}</button>
+        </form>
+        <p className="mt-5 rounded-[15px] bg-fill/70 px-4 py-3 text-[12.5px] leading-relaxed text-mute">La cuenta se verifica con Supabase. Los datos del club, incluido el documento y la foto de las socias, se sincronizan en una tabla privada protegida por usuario. Publica este HTML en una dirección HTTPS para confirmar el correo y acceder desde otros dispositivos.</p>
+      </section>
+    </main>
+  );
+}
+
+/* =====================  App  ===================== */
+class Boundary extends React.Component {
+  constructor(p) { super(p); this.state = { err: null }; }
+  static getDerivedStateFromError(err) { return { err }; }
+  render() {
+    if (!this.state.err) return this.props.children;
+    return <div className="boot"><div><b style={{ color: 'var(--ink)' }}>Algo ha fallado.</b><br />Recarga la página. Tus datos no se han perdido.<br /><small>{String(this.state.err.message || this.state.err)}</small></div></div>;
+  }
+}
+
+function ClubApp({ onLogout }) {
+  useDB();
+  const initial = TABS.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'resumen';
+  const [tab, setTab] = useState(initial);
+  const [sheet, setSheet] = useState(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [spot, setSpot] = useState(false);
+  const [dialog, setDialog] = useState(null);
+  const [toasts, setToasts] = useState([]);
+  const [q, setQ] = useState({ socios: '', stock: '' });
+  const [fl, setFl] = useState({ socios: 'todos', stock: 'todos' });
+  const [scroll, setScroll] = useState(0);
+
+  const go = t => {
+    if (!TABS.includes(t)) t = 'resumen';
+    setTab(t);
+    if (location.hash !== '#' + t) history.replaceState(null, '', '#' + t);
+    window.scrollTo({ top: 0 });
+  };
+  const openSheet = s => { setSheet(s); setSheetOpen(true); };
+  const closeSheet = () => setSheetOpen(false);
+  const sheetGone = () => setSheet(null);
+  const ask = o => new Promise(res => setDialog({ ...o, res }));
+  const openSpot = () => setSpot(true);
+
+  useEffect(() => {
+    bus.toast = (msg, kind) => {
+      const id = uid();
+      setToasts([{ id, msg, kind }]);
+      setTimeout(() => setToasts(t => t.map(x => x.id === id ? { ...x, out: true } : x)), 2600);
+      setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 2900);
+    };
+    const onHash = () => { const t = location.hash.slice(1); if (TABS.includes(t)) setTab(t); };
+    const onScroll = () => setScroll(window.scrollY);
+    const onKey = e => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setSpot(s => !s); }
+    };
+    window.addEventListener('hashchange', onHash);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('keydown', onKey);
+    return () => { bus.toast = null; window.removeEventListener('hashchange', onHash); window.removeEventListener('scroll', onScroll); window.removeEventListener('keydown', onKey); };
+  }, []);
+
+  const actions = [
+    { id: 'a-res', label: 'Ir a Resumen', icon: I.home, tint: 'bg-[#0A84FF]', run: () => go('resumen') },
+    { id: 'a-soc', label: 'Ir a Socios', icon: I.users, tint: 'bg-[#30B454]', run: () => go('socios') },
+    { id: 'a-sto', label: 'Ir a Stock', icon: I.box, tint: 'bg-[#FF9500]', run: () => go('stock') },
+    { id: 'a-nsoc', label: 'Nuevo socio', icon: I.plus, tint: 'bg-[#30B454]', run: () => openSheet({ type: 'socio' }) },
+    { id: 'a-nprod', label: 'Nuevo producto', icon: I.plus, tint: 'bg-[#FF9500]', run: () => openSheet({ type: 'prod' }) },
+    { id: 'a-copia', label: 'Descargar copia de seguridad', icon: I.download, tint: 'bg-[#5E5CE6]', run: backup },
+    { id: 'a-aju', label: 'Copias y ajustes', icon: I.sliders, tint: 'bg-[#8E8E93]', run: () => openSheet({ type: 'ajustes' }) }
+  ];
+  const ctx = { go, openSheet, closeSheet, sheetOpen, sheetGone, ask, actions, openSpot, logout: onLogout };
+  const view = tab === 'socios'
+    ? <SociosView q={q.socios} setQ={v => setQ(s => ({ ...s, socios: v }))} f={fl.socios} setF={v => setFl(s => ({ ...s, socios: v }))} />
+    : tab === 'stock'
+      ? <StockView q={q.stock} setQ={v => setQ(s => ({ ...s, stock: v }))} f={fl.stock} setF={v => setFl(s => ({ ...s, stock: v }))} />
+      : <ResumenView />;
+
+  return (
+    <AppCtx.Provider value={ctx}>
+      <div className="relative isolate min-h-dvh overflow-x-clip">
+        <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute -left-40 -top-48 size-[560px] rounded-full bg-accent/15 blur-3xl" />
+          <div className="absolute -right-48 top-1/3 size-[600px] rounded-full bg-[#BF5AF2]/10 blur-3xl" />
+        </div>
+        <TopBar tab={tab} scrolled={scroll > 6} showTitle={scroll > 64} onSearch={openSpot} />
+        <main className="mx-auto max-w-4xl px-4 pb-48 pt-[66px] sm:px-6">
+          <div key={tab} className="anim-view">{view}</div>
+        </main>
+        <Dock tab={tab} go={go} onSearch={openSpot} onSettings={() => openSheet({ type: 'ajustes' })} openSheet={openSheet} />
+        {sheet && <SheetHost sheet={sheet} />}
+        {spot && <Spotlight onClose={() => setSpot(false)} />}
+        {dialog && <ConfirmDialog d={dialog} onDone={v => { dialog.res(v); setDialog(null); }} />}
+        {toasts.map(t => (
+          <div key={t.id} role="status" className={`fixed left-1/2 top-[max(12px,env(safe-area-inset-top))] z-[80] flex max-w-[calc(100vw-24px)] items-center gap-2.5 rounded-full bg-[#1c1c1e] py-2.5 pl-3 pr-5 text-[15px] font-medium text-white shadow-2xl ring-1 ring-white/10 ${t.out ? 'anim-island-out' : 'anim-island'}`}>
+            <span className={`grid size-6 shrink-0 place-items-center rounded-full ${t.kind === 'bad' ? 'bg-[#FF453A]' : 'bg-[#30D158]'}`}>{t.kind === 'bad' ? <I.x className="size-3.5" strokeWidth="3" /> : <I.check className="size-3.5" strokeWidth="3" />}</span>
+            <span className="min-w-0">{t.msg}</span>
+          </div>
+        ))}
+      </div>
+    </AppCtx.Provider>
+  );
+}
+
+function App() {
+  const [session, setSession] = useState(null);
+  const [ready, setReady] = useState(false);
+  const [cloudError, setCloudError] = useState('');
+  const activeUser = useRef('');
+  const activate = async nextSession => {
+    if (!nextSession?.user) return;
+    const user = nextSession.user;
+    const userId = user.id;
+    setSession(nextSession);
+    if (activeUser.current === userId) return;
+    activeUser.current = userId;
+    setReady(false); setCloudError('');
+    clearTimeout(store.syncTimer);
+    try {
+      const { data, error } = await cloud.from('club_data').select('payload').eq('user_id', userId).maybeSingle();
+      if (error) throw error;
+      if (data?.payload) {
+        store.replaceFromCloud(data.payload, userId);
+      } else {
+        const cachedOwner = localStorage.getItem(CLOUD_OWNER_KEY);
+        const legacy = readLegacyAccount();
+        const email = String(user.email || '').toLowerCase();
+        const mayImportLocal = cachedOwner === userId || (!cachedOwner && legacy?.email && legacy.email.toLowerCase() === email);
+        if (!mayImportLocal) store.db = blank();
+        const clubName = user.user_metadata?.club_name;
+        if (clubName && (!store.db.club.nombre || store.db.club.nombre === 'Mi club')) store.db.club.nombre = clubName;
+        store.userId = userId;
+        await store.syncRemote();
+        store.replaceFromCloud(store.db, userId);
+      }
+      setReady(true);
+    } catch (err) {
+      activeUser.current = '';
+      setCloudError(err.message || 'No se pudieron cargar los datos.');
+      setReady(true);
+    }
+  };
+  useEffect(() => {
+    let mounted = true;
+    const { data: { subscription } } = cloud.auth.onAuthStateChange((_event, nextSession) => {
+      if (!mounted) return;
+      if (nextSession) {
+        setSession(nextSession);
+        setTimeout(() => { if (mounted) activate(nextSession); }, 0);
+      } else {
+        activeUser.current = '';
+        clearTimeout(store.syncTimer);
+        store.userId = null;
+        setSession(null); setCloudError(''); setReady(true);
+      }
+    });
+    cloud.auth.getSession().then(({ data, error }) => {
+      if (!mounted) return;
+      if (error) setCloudError(error.message);
+      if (data?.session) void activate(data.session);
+      else setReady(true);
+    }).catch(err => { if (mounted) { setCloudError(err.message || 'No se pudo conectar con Supabase.'); setReady(true); } });
+    return () => { mounted = false; subscription.unsubscribe(); };
+  }, []);
+  const retry = () => { activeUser.current = ''; if (session) void activate(session); };
+  const logout = async () => { await cloud.auth.signOut(); };
+  if (session && cloudError) return (
+    <main className="relative grid min-h-dvh place-items-center bg-bg px-4 py-10 text-ink">
+      <section className="card-shadow w-full max-w-[480px] rounded-[28px] bg-card p-7 text-center">
+        <div className="mx-auto mb-4 grid size-14 place-items-center rounded-[17px] bg-warn/15 text-warn"><I.alert className="size-7" /></div>
+        <h1 className="text-[24px] font-bold">No se pudieron cargar los datos</h1>
+        <p className="mt-2 break-words text-[14px] text-mute">{cloudError}</p>
+        <div className="mt-5 flex justify-center gap-2"><Btn kind="primary" onClick={retry}>Reintentar</Btn><Btn kind="plain" onClick={logout}>Cerrar sesión</Btn></div>
+      </section>
+    </main>
+  );
+  if (!ready) return <div className="boot"><div><i></i>Conectando y sincronizando el club…</div></div>;
+  if (!session) return <AccountScreen onAuthenticated={activate} />;
+  return <Boundary><ClubApp onLogout={logout} /></Boundary>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
