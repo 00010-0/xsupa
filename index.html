@@ -118,6 +118,12 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 
 /* =====================  Datos y nube  ===================== */
+const CONFIRMATION_CALLBACK = (() => {
+  const query = new URLSearchParams(window.location.search);
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  return query.get('type') === 'signup' || hash.get('type') === 'signup';
+})();
+const PENDING_SIGNUP_KEY = 'club-socios-pending-signup';
 const SUPABASE_URL = 'https://akgftqavmvqkzqjaoyda.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_ddTuvOk8EPRKeKr498XyhA_bVOBg4iG';
 const cloud = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
@@ -1323,12 +1329,13 @@ function AccountScreen({ onAuthenticated }) {
     setBusy(true);
     try {
       if (registering) {
+        localStorage.setItem(PENDING_SIGNUP_KEY, JSON.stringify({ email: mail, clubName: clubName.trim() }));
         const { data, error } = await cloud.auth.signUp({
           email: mail,
           password,
           options: { data: { club_name: clubName.trim(), owner: owner.trim() } }
         });
-        if (error) throw error;
+        if (error) { localStorage.removeItem(PENDING_SIGNUP_KEY); throw error; }
         if (data.session) await onAuthenticated(data.session);
         else {
           setMode('login');
@@ -1367,6 +1374,25 @@ function AccountScreen({ onAuthenticated }) {
           <button disabled={busy} className="mt-2 inline-flex h-12 w-full items-center justify-center rounded-full bg-accent px-5 text-[16px] font-semibold text-white transition hover:brightness-110 active:scale-[.98] disabled:opacity-50">{busy ? 'Conectando…' : registering ? 'Crear cuenta del club' : 'Entrar'}</button>
         </form>
         <p className="mt-5 rounded-[15px] bg-fill/70 px-4 py-3 text-[12.5px] leading-relaxed text-mute">La cuenta se verifica con Supabase. Los datos del club, incluido el documento y la foto de las socias, se sincronizan en una tabla privada protegida por usuario. Publica este HTML en una dirección HTTPS para confirmar el correo y acceder desde otros dispositivos.</p>
+      </section>
+    </main>
+  );
+}
+
+function CongratsScreen({ clubName, onContinue }) {
+  return (
+    <main className="relative isolate grid min-h-dvh place-items-center overflow-hidden bg-bg px-4 py-10 text-ink">
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute -left-40 -top-48 size-[560px] rounded-full bg-ok/12 blur-3xl" />
+        <div className="absolute -right-48 top-1/3 size-[600px] rounded-full bg-accent/10 blur-3xl" />
+      </div>
+      <section className="anim-view card-shadow w-full max-w-[480px] rounded-[28px] bg-card p-7 text-center sm:p-9">
+        <div className="mx-auto mb-5 grid size-16 place-items-center rounded-full bg-ok/15 text-ok"><I.check className="size-8" strokeWidth="2.5" /></div>
+        <p className="text-[13px] font-semibold uppercase tracking-[.12em] text-ok">Cuenta confirmada</p>
+        <h1 className="mt-2 text-[30px] font-bold leading-tight tracking-[-.03em]">¡Enhorabuena!</h1>
+        <p className="mx-auto mt-3 max-w-sm text-[17px] leading-snug">Has creado la cuenta de <b>{clubName || 'tu club'}</b>.</p>
+        <p className="mx-auto mt-2 max-w-sm text-[14px] leading-relaxed text-mute">Tu correo está confirmado y la cuenta ya está lista. Puedes acceder desde otros navegadores con el mismo correo y contraseña.</p>
+        <Btn kind="primary" className="mt-6 w-full" onClick={onContinue}>Entrar a mi club</Btn>
       </section>
     </main>
   );
@@ -1471,11 +1497,17 @@ function App() {
   const [session, setSession] = useState(null);
   const [ready, setReady] = useState(false);
   const [cloudError, setCloudError] = useState('');
+  const [welcomeClub, setWelcomeClub] = useState('');
   const activeUser = useRef('');
   const activate = async nextSession => {
     if (!nextSession?.user) return;
     const user = nextSession.user;
     const userId = user.id;
+    const email = String(user.email || '').toLowerCase();
+    let pendingSignup = null;
+    try { pendingSignup = JSON.parse(localStorage.getItem(PENDING_SIGNUP_KEY)); } catch {}
+    const seenKey = 'club-socios-welcome-seen-' + userId;
+    const shouldWelcome = localStorage.getItem(seenKey) !== '1' && (CONFIRMATION_CALLBACK || (pendingSignup?.email || '').toLowerCase() === email);
     setSession(nextSession);
     if (activeUser.current === userId) return;
     activeUser.current = userId;
@@ -1497,6 +1529,14 @@ function App() {
         store.userId = userId;
         await store.syncRemote();
         store.replaceFromCloud(store.db, userId);
+      }
+      if (shouldWelcome) {
+        const clubName = user.user_metadata?.club_name || pendingSignup?.clubName || store.db.club.nombre;
+        try {
+          localStorage.setItem(seenKey, '1');
+          if ((pendingSignup?.email || '').toLowerCase() === email) localStorage.removeItem(PENDING_SIGNUP_KEY);
+        } catch {}
+        setWelcomeClub(clubName);
       }
       setReady(true);
     } catch (err) {
@@ -1541,6 +1581,7 @@ function App() {
   );
   if (!ready) return <div className="boot"><div><i></i>Conectando y sincronizando el club…</div></div>;
   if (!session) return <AccountScreen onAuthenticated={activate} />;
+  if (welcomeClub) return <CongratsScreen clubName={welcomeClub} onContinue={() => setWelcomeClub('')} />;
   return <Boundary><ClubApp onLogout={logout} /></Boundary>;
 }
 
